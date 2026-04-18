@@ -134,9 +134,15 @@
   }
 
   // ===== Listen for auth changes =====
+  // Guard: อย่า redirect ถ้าอยู่ใน public page อยู่แล้ว (กัน infinite loop เมื่อ
+  // SIGNED_OUT fire ซ้ำตอน token corrupt/expired)
   supabaseClient.auth.onAuthStateChange(function (event, session) {
     if (event === 'SIGNED_OUT') {
-      window.location.href = 'login.html';
+      var current = window.location.pathname.split('/').pop() || 'index.html';
+      var publicOrIndex = ['login.html', 'register.html', 'index.html', ''];
+      if (publicOrIndex.indexOf(current) === -1) {
+        window.location.href = 'login.html';
+      }
     }
   });
 

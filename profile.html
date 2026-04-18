@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bizfriend - โปรไฟล์</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://liqjwpiypsvuyzxnydbu.supabase.co" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'LINE Seed Sans TH', 'sans-serif'] },
+          colors: { primary: '#004ac6', 'primary-container': '#2563eb', surface: '#f7f9fb', 'surface-low': '#f2f4f6' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-surface text-slate-800 antialiased">
+
+  <!-- ===== Desktop Sidebar Nav ===== -->
+  <nav class="sidebar-nav custom-scrollbar">
+    <a href="network.html" class="px-3 mb-8 block">
+      <span class="logo-font text-2xl text-primary">bizfriend</span>
+    </a>
+    <div class="flex flex-col gap-1">
+      <a href="network.html" class="nav-item">
+        <span class="material-symbols-rounded">person_search</span>
+        หาเพื่อน
+      </a>
+      <a href="chat.html" class="nav-item">
+        <span class="relative inline-flex">
+          <span class="material-symbols-rounded">chat</span>
+          <span data-unread-badge class="hidden absolute -top-1 -right-1.5 min-w-[1.125rem] h-[1.125rem] px-1 rounded-full bg-red-500 text-white text-[0.65rem] font-bold flex items-center justify-center leading-none">0</span>
+        </span>
+        พูดคุย
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===== Main Content ===== -->
+  <main class="main-content">
+    <!-- Mobile Header -->
+    <div class="hide-desktop flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <span class="logo-font text-xl text-primary">bizfriend</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="blur-toggle" title="เปิด/ปิด blur รูปภาพ">
+          <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
+          <span class="material-symbols-rounded icon-off">visibility</span>
+        </button>
+        <a href="settings.html" class="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center" title="ตั้งค่า">
+          <span class="material-symbols-rounded text-slate-600 text-xl">settings</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Desktop Page Header -->
+    <div class="hide-mobile flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">โปรไฟล์</h1>
+        <p class="text-sm text-slate-500 mt-0.5">จัดการโปรไฟล์ของคุณ</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <button class="blur-toggle" title="เปิด/ปิด blur รูปภาพ">
+          <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
+          <span class="material-symbols-rounded icon-off">visibility</span>
+        </button>
+        <div class="relative">
+          <button class="user-menu-toggle flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-full bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
+            <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-primary font-semibold text-xs profile-avatar-display user-avatar-initial">?</div>
+            <span class="text-sm font-medium text-slate-700 user-display-name">...</span>
+            <span class="material-symbols-rounded text-slate-400 text-lg">expand_more</span>
+          </button>
+          <div class="user-menu">
+            <a href="profile.html">
+              <span class="material-symbols-rounded text-lg">person</span>
+              โปรไฟล์
+            </a>
+            <a href="settings.html">
+              <span class="material-symbols-rounded text-lg">settings</span>
+              ตั้งค่า
+            </a>
+            <div class="divider"></div>
+            <a href="#" class="danger" data-action="logout">
+              <span class="material-symbols-rounded text-lg">logout</span>
+              ออกจากระบบ
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-5">
+
+      <!-- ==================== Private placeholder (shown only when viewing private profile) ==================== -->
+      <div id="private-placeholder" class="hidden bg-white border border-slate-200/60 rounded-2xl p-8 text-center">
+        <div class="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center" id="private-placeholder-avatar"></div>
+        <div class="text-lg font-bold text-slate-900" id="private-placeholder-name">...</div>
+        <div class="flex items-center justify-center gap-2 mt-3 text-slate-500">
+          <span class="material-symbols-rounded text-lg">lock</span>
+          <span class="text-sm">โปรไฟล์ส่วนตัว</span>
+        </div>
+        <p class="text-xs text-slate-400 mt-2">ผู้ใช้นี้ไม่เปิดเผยข้อมูล</p>
+        <a id="private-send-message-btn" href="#" class="btn-primary mt-5 inline-flex">
+          <span class="material-symbols-rounded text-lg">chat</span>
+          ส่งข้อความ
+        </a>
+      </div>
+
+      <!-- ==================== Profile Header Card ==================== -->
+      <div data-hide-on-private class="bg-white border border-slate-200/60 rounded-2xl">
+        <!-- Cover -->
+        <div class="profile-cover" id="profile-cover">
+          <label data-own-only class="absolute top-4 right-4 bg-white/20 backdrop-blur-sm text-white rounded-full px-3 py-1.5 text-xs font-medium flex items-center gap-1 hover:bg-white/30 transition-colors cursor-pointer">
+            <input type="file" accept="image/*" class="hidden" onchange="bizProfile.uploadCover(this)">
+            <span class="material-symbols-rounded text-base">photo_camera</span>
+            เปลี่ยนภาพปก
+          </label>
+        </div>
+        <!-- Info -->
+        <div class="px-5 pb-5">
+          <label class="profile-avatar-lg relative group" title="เปลี่ยนรูปโปรไฟล์">
+            <span class="profile-avatar-inner absolute inset-0 rounded-full flex items-center justify-center overflow-hidden"></span>
+            <input data-own-only type="file" accept="image/*" class="hidden" onchange="bizProfile.uploadAvatar(this)">
+            <div data-own-only class="absolute inset-0 bg-black/30 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity cursor-pointer z-10">
+              <span class="material-symbols-rounded text-white text-2xl">photo_camera</span>
+            </div>
+          </label>
+
+          <!-- Display Mode -->
+          <div id="header-display">
+            <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mt-3">
+              <div>
+                <h2 class="text-xl font-bold text-slate-900" id="profile-name">...</h2>
+                <p class="text-sm text-slate-500 mt-0.5" id="profile-tagline"></p>
+                <div class="flex items-center gap-4 mt-2 text-sm text-slate-500">
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-rounded text-base">location_on</span>
+                    <span id="profile-location">-</span>
+                  </span>
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-rounded text-base">favorite</span>
+                    <span id="profile-looking">-</span>
+                  </span>
+                </div>
+                <div class="flex items-center gap-4 mt-3">
+                  <div class="text-center">
+                    <div class="text-lg font-bold text-slate-900" id="friend-count">0</div>
+                    <div class="text-xs text-slate-500">เพื่อน</div>
+                  </div>
+                  <div class="w-px h-8 bg-slate-200"></div>
+                  <div class="text-center">
+                    <div class="text-lg font-bold text-slate-900" id="post-count">0</div>
+                    <div class="text-xs text-slate-500">โพสต์</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <!-- Privacy custom dropdown -->
+                <div data-own-only id="privacy-menu" class="relative">
+                  <button type="button" onclick="bizProfile.togglePrivacyMenu(event)" class="text-xs bg-slate-50 hover:bg-slate-100 rounded-full pl-3 pr-2 py-1.5 border border-slate-200 font-medium text-slate-700 flex items-center gap-1 transition-colors">
+                    <span id="privacy-current-label">🟢 เปิดเผย</span>
+                    <span class="material-symbols-rounded text-base">expand_more</span>
+                  </button>
+                  <div id="privacy-menu-panel" class="hidden absolute right-0 top-full mt-2 w-72 bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-hidden">
+                    <div class="px-4 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wide bg-slate-50 border-b border-slate-100">ใครดูโปรไฟล์ของคุณได้</div>
+                    <button type="button" class="w-full text-left px-4 py-3 hover:bg-slate-50 flex items-start gap-3 border-b border-slate-50" data-visibility-value="public" onclick="bizProfile.pickVisibility('public')">
+                      <span class="w-2 h-2 rounded-full bg-green-500 mt-1.5 flex-shrink-0"></span>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-sm font-semibold text-slate-800">เปิดเผย</div>
+                        <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">ใครก็ดูได้เต็ม — รูป โพสต์ ข้อมูลทั้งหมด เหมาะกับการหาเพื่อนใหม่</div>
+                      </div>
+                    </button>
+                    <button type="button" class="w-full text-left px-4 py-3 hover:bg-slate-50 flex items-start gap-3 border-b border-slate-50" data-visibility-value="limited" onclick="bizProfile.pickVisibility('limited')">
+                      <span class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 flex-shrink-0"></span>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-sm font-semibold text-slate-800">จำกัด</div>
+                        <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">คนอื่นเห็นแค่ ชื่อ รูปโปรไฟล์ bio และความสนใจ ซ่อน รูปภาพ โพสต์ social และการศึกษา/อาชีพ</div>
+                      </div>
+                    </button>
+                    <button type="button" class="w-full text-left px-4 py-3 hover:bg-slate-50 flex items-start gap-3" data-visibility-value="private" onclick="bizProfile.pickVisibility('private')">
+                      <span class="w-2 h-2 rounded-full bg-red-500 mt-1.5 flex-shrink-0"></span>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-sm font-semibold text-slate-800">ส่วนตัว</div>
+                        <div class="text-xs text-slate-500 mt-0.5 leading-relaxed">ซ่อนทุกอย่างจากคนแปลกหน้า — เห็นแค่ชื่อ + รูปโปรไฟล์ (ยังส่งข้อความหาคุณได้)</div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <button data-own-only class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors" title="แก้ไขโปรไฟล์" onclick="bizProfile.toggleEdit('header')">
+                  <span class="material-symbols-rounded text-slate-600 text-lg">edit</span>
+                </button>
+                <button data-other-only id="profile-fav-btn" onclick="bizProfile.toggleFavoriteThisProfile()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-red-50 flex items-center justify-center transition-colors" title="ถูกใจ">
+                  <span id="profile-fav-icon" class="material-symbols-rounded text-slate-400 text-lg">favorite</span>
+                </button>
+                <a data-other-only id="send-message-btn" href="#" class="btn-primary">
+                  <span class="material-symbols-rounded text-lg">chat</span>
+                  ส่งข้อความ
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Mode -->
+          <div id="header-edit" class="hidden mt-3">
+            <div class="flex flex-col gap-3">
+              <div>
+                <label class="text-xs font-medium text-slate-500 mb-1 block">ชื่อที่แสดง</label>
+                <input type="text" id="edit-name" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div>
+                  <label class="text-xs text-slate-500 mb-1 block">อายุ</label>
+                  <input type="number" id="edit-age" placeholder="ปี" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+                </div>
+                <div>
+                  <label class="text-xs text-slate-500 mb-1 block">น้ำหนัก</label>
+                  <input type="number" id="edit-weight" placeholder="กก." class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+                </div>
+                <div>
+                  <label class="text-xs text-slate-500 mb-1 block">ส่วนสูง</label>
+                  <input type="number" id="edit-height" placeholder="ซม." class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+                </div>
+                <div>
+                  <label class="text-xs text-slate-500 mb-1 block">แบบ</label>
+                  <select id="edit-role" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+                    <option value="">- เลือก -</option>
+                    <option value="รุก">รุก</option>
+                    <option value="รับ">รับ</option>
+                    <option value="โบ้ท">โบ้ท</option>
+                    <option value="ไบ">ไบ</option>
+                    <option value="ชายแท้">ชายแท้</option>
+                  </select>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-xs text-slate-500 mb-1 block">จังหวัด</label>
+                  <div id="edit-province-wrap" class="relative">
+                    <input type="hidden" id="edit-province" value="">
+                    <button type="button" id="edit-province-btn" onclick="bizProfile.toggleEditProvinceMenu(event)" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none flex items-center justify-between hover:bg-slate-100">
+                      <span id="edit-province-label" class="text-slate-400">— ไม่ระบุ —</span>
+                      <span class="material-symbols-rounded text-base text-slate-400">expand_more</span>
+                    </button>
+                    <div id="edit-province-menu" class="hidden absolute left-0 top-full mt-1 w-full bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-hidden">
+                      <div class="p-2 border-b border-slate-100">
+                        <input id="edit-province-search" type="search" placeholder="ค้นหาจังหวัด..." class="w-full px-3 py-1.5 bg-slate-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                      </div>
+                      <div id="edit-province-list" class="max-h-64 overflow-y-auto py-1"></div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label class="text-xs text-slate-500 mb-1 block">กำลังมองหา</label>
+                  <div class="flex flex-wrap gap-2 mt-1">
+                    <label class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                      <input type="checkbox" name="looking_for" value="หาแฟน" class="w-3.5 h-3.5 rounded text-primary"> หาแฟน
+                    </label>
+                    <label class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                      <input type="checkbox" name="looking_for" value="หาเพื่อน" class="w-3.5 h-3.5 rounded text-primary"> หาเพื่อน
+                    </label>
+                    <label class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                      <input type="checkbox" name="looking_for" value="หาคนคุย" class="w-3.5 h-3.5 rounded text-primary"> หาคนคุย
+                    </label>
+                    <label class="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+                      <input type="checkbox" name="looking_for" value="หาเพื่อนเที่ยว" class="w-3.5 h-3.5 rounded text-primary"> หาเพื่อนเที่ยว
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3 justify-end">
+                <button class="btn-secondary !py-2 !px-4 !text-sm" onclick="bizProfile.toggleEdit('header')">ยกเลิก</button>
+                <button class="btn-primary !py-2 !px-4 !text-sm" onclick="bizProfile.saveProfile()">บันทึก</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ==================== About ==================== -->
+      <div data-hide-on-private class="bg-white border border-slate-200/60 rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-slate-900">เกี่ยวกับ</h2>
+          <button data-own-only class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center" onclick="bizProfile.toggleEdit('about')">
+            <span class="material-symbols-rounded text-slate-400 text-xl">edit</span>
+          </button>
+        </div>
+        <div id="about-display">
+          <p class="text-sm text-slate-600 leading-relaxed" id="profile-bio-text"></p>
+        </div>
+        <div id="about-edit" class="hidden">
+          <textarea id="edit-bio" rows="4" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none resize-none"></textarea>
+          <div class="flex items-center gap-3 justify-end mt-3">
+            <button class="btn-secondary !py-2 !px-4 !text-sm" onclick="bizProfile.toggleEdit('about')">ยกเลิก</button>
+            <button class="btn-primary !py-2 !px-4 !text-sm" onclick="bizProfile.saveProfile()">บันทึก</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== Photos ==================== -->
+      <div data-hide-on-limited data-hide-on-private class="bg-white border border-slate-200/60 rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-slate-900">รูปภาพ</h2>
+        </div>
+        <div class="flex flex-wrap gap-2" id="photos-grid">
+          <div class="w-full aspect-square rounded-xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400">
+            <span class="material-symbols-rounded text-2xl">hourglass_empty</span>
+            <span class="text-xs mt-1">กำลังโหลด...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== Interests ==================== -->
+      <div data-hide-on-private class="bg-white border border-slate-200/60 rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-slate-900">ความสนใจ</h2>
+          <button data-own-only class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center" onclick="bizProfile.toggleEdit('interests')">
+            <span class="material-symbols-rounded text-slate-400 text-xl">edit</span>
+          </button>
+        </div>
+        <!-- Display -->
+        <div id="interests-display" class="flex flex-wrap gap-2"></div>
+        <!-- Edit -->
+        <div id="interests-edit" class="hidden mt-3">
+          <label class="text-xs text-slate-500 mb-1 block">พิมพ์ความสนใจ คั่นด้วยเครื่องหมายจุลภาค (,)</label>
+          <input type="text" id="edit-interests" placeholder="เช่น ดูหนัง, คาเฟ่, ทะเล, เกม" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+          <div class="flex items-center gap-3 justify-end mt-3">
+            <button class="btn-secondary !py-2 !px-4 !text-sm" onclick="bizProfile.toggleEdit('interests')">ยกเลิก</button>
+            <button class="btn-primary !py-2 !px-4 !text-sm" onclick="bizProfile.saveInterests()">บันทึก</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== Basic Info ==================== -->
+      <div data-hide-on-limited data-hide-on-private class="bg-white border border-slate-200/60 rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-slate-900">ข้อมูลพื้นฐาน</h2>
+          <button data-own-only class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center" onclick="bizProfile.toggleEdit('basic')">
+            <span class="material-symbols-rounded text-slate-400 text-xl">edit</span>
+          </button>
+        </div>
+        <div id="basic-display">
+          <div class="grid grid-cols-3 gap-3">
+            <div class="flex items-center gap-2 text-sm">
+              <span class="material-symbols-rounded text-slate-400 text-lg">school</span>
+              <span class="text-slate-600" id="profile-education">-</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="material-symbols-rounded text-slate-400 text-lg">work</span>
+              <span class="text-slate-600" id="profile-work">-</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm">
+              <span class="material-symbols-rounded text-slate-400 text-lg">translate</span>
+              <span class="text-slate-600" id="profile-languages">-</span>
+            </div>
+          </div>
+        </div>
+        <div id="basic-edit" class="hidden">
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="text-xs text-slate-500 mb-1 block">การศึกษา</label>
+              <input type="text" id="edit-education" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+            </div>
+            <div>
+              <label class="text-xs text-slate-500 mb-1 block">อาชีพ</label>
+              <input type="text" id="edit-work" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+            </div>
+            <div>
+              <label class="text-xs text-slate-500 mb-1 block">ภาษา</label>
+              <input type="text" id="edit-languages" class="w-full px-3 py-2 bg-slate-50 rounded-xl text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+            </div>
+          </div>
+          <div class="flex items-center gap-3 justify-end mt-3">
+            <button class="btn-secondary !py-2 !px-4 !text-sm" onclick="bizProfile.toggleEdit('basic')">ยกเลิก</button>
+            <button class="btn-primary !py-2 !px-4 !text-sm" onclick="bizProfile.saveProfile()">บันทึก</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==================== Favorites (own only) ==================== -->
+      <div data-own-only class="bg-white border border-slate-200/60 rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-slate-900">เพื่อนที่ถูกใจ</h2>
+          <span id="favorites-count" class="text-xs text-slate-400"></span>
+        </div>
+        <div id="favorites-list" class="flex flex-wrap gap-3">
+          <div class="text-center text-sm text-slate-400 py-4 w-full">กำลังโหลด...</div>
+        </div>
+      </div>
+
+      <!-- ==================== Posts ==================== -->
+      <div data-hide-on-limited data-hide-on-private class="bg-white border border-slate-200/60 rounded-2xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-base font-bold text-slate-900">โพสต์</h2>
+          <span class="text-xs text-slate-400" id="posts-header-count"></span>
+        </div>
+        <div id="user-posts-list" class="flex flex-col gap-3">
+          <div class="text-center text-sm text-slate-400 py-4">กำลังโหลด...</div>
+        </div>
+      </div>
+
+
+    </div>
+  </main>
+
+  <!-- ===== Toast ===== -->
+  <div id="toast" class="hidden fixed top-5 right-5 bg-white border border-slate-200 text-slate-800 text-sm px-4 py-3 rounded-xl shadow-xl z-[100] flex items-center gap-2 min-w-[16rem] max-w-sm"></div>
+
+  <!-- ===== Photo Modal ===== -->
+  <div id="photo-lightbox" class="hidden fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4" onclick="bizProfile.closePhoto(event)">
+    <div class="flex items-center gap-3">
+      <!-- Prev button -->
+      <button type="button" id="photo-prev-btn" class="w-11 h-11 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center transition-colors flex-shrink-0" onclick="event.stopPropagation(); bizProfile.prevPhoto()" title="ก่อนหน้า">
+        <span class="material-symbols-rounded text-slate-700">chevron_left</span>
+      </button>
+
+      <!-- Modal card -->
+      <div class="relative bg-white rounded-2xl shadow-2xl p-3 max-w-[55vw] max-h-[80vh] flex flex-col" onclick="event.stopPropagation()">
+        <button type="button" class="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-white shadow-lg border border-slate-200 hover:bg-slate-50 flex items-center justify-center transition-colors z-10" onclick="bizProfile.closePhoto(event, true)" title="ปิด">
+          <span class="material-symbols-rounded text-slate-600 text-lg">close</span>
+        </button>
+        <img id="photo-lightbox-img" src="" alt="" class="max-w-full max-h-[72vh] object-contain rounded-xl">
+        <div class="flex items-center justify-center mt-2">
+          <span id="photo-counter" class="text-xs text-slate-500 font-medium"></span>
+        </div>
+      </div>
+
+      <!-- Next button -->
+      <button type="button" id="photo-next-btn" class="w-11 h-11 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center transition-colors flex-shrink-0" onclick="event.stopPropagation(); bizProfile.nextPhoto()" title="ถัดไป">
+        <span class="material-symbols-rounded text-slate-700">chevron_right</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Mobile Bottom Nav ===== -->
+  <nav class="bottom-nav">
+    <a href="network.html" class="nav-item">
+      <span class="material-symbols-rounded">person_search</span>
+      หาเพื่อน
+    </a>
+    <a href="chat.html" class="nav-item">
+      <span class="relative inline-flex">
+        <span class="material-symbols-rounded">chat</span>
+        <span data-unread-badge class="hidden absolute -top-0.5 -right-1.5 min-w-[1.125rem] h-[1.125rem] px-1 rounded-full bg-red-500 text-white text-[0.65rem] font-bold flex items-center justify-center leading-none">0</span>
+      </span>
+      พูดคุย
+    </a>
+    <a href="profile.html" class="nav-item active">
+      <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-primary font-semibold text-[0.55rem] profile-avatar-display user-avatar-initial">?</div>
+      โปรไฟล์
+    </a>
+  </nav>
+
+  <!-- ===== Panic Button ===== -->
+  <a href="https://google.com" class="panic-btn" title="ออกด่วน">
+    <span class="material-symbols-rounded text-xl">emergency_home</span>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

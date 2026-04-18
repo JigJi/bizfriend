@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>bizfriend - หาเพื่อน</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://liqjwpiypsvuyzxnydbu.supabase.co" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'LINE Seed Sans TH', 'sans-serif'] },
+          colors: { primary: '#004ac6', 'primary-container': '#2563eb', surface: '#f7f9fb', 'surface-low': '#f2f4f6' }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="font-sans bg-surface text-slate-800 antialiased">
+
+  <!-- ===== Desktop Sidebar Nav ===== -->
+  <nav class="sidebar-nav custom-scrollbar">
+    <a href="network.html" class="px-3 mb-8 block">
+      <span class="logo-font text-2xl text-primary">bizfriend</span>
+    </a>
+    <div class="flex flex-col gap-1">
+      <a href="network.html" class="nav-item active">
+        <span class="material-symbols-rounded">person_search</span>
+        หาเพื่อน
+      </a>
+      <a href="chat.html" class="nav-item">
+        <span class="relative inline-flex">
+          <span class="material-symbols-rounded">chat</span>
+          <span data-unread-badge class="hidden absolute -top-1 -right-1.5 min-w-[1.125rem] h-[1.125rem] px-1 rounded-full bg-red-500 text-white text-[0.65rem] font-bold flex items-center justify-center leading-none">0</span>
+        </span>
+        พูดคุย
+      </a>
+    </div>
+  </nav>
+
+  <!-- ===== Main Content ===== -->
+  <main class="main-content">
+    <!-- Mobile Header -->
+    <div class="hide-desktop flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2">
+        <span class="logo-font text-xl text-primary">bizfriend</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="blur-toggle" title="เปิด/ปิด blur รูปภาพ">
+          <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
+          <span class="material-symbols-rounded icon-off">visibility</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Page Title -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-900">หาเพื่อน</h1>
+        <p class="text-sm text-slate-500 mt-0.5">โพสต์หาเพื่อน หาคนคุย หาคนเจอ</p>
+      </div>
+      <div class="hide-mobile flex items-center gap-3">
+        <button class="blur-toggle" title="เปิด/ปิด blur รูปภาพ">
+          <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
+          <span class="material-symbols-rounded icon-off">visibility</span>
+        </button>
+        <div class="relative">
+          <button class="user-menu-toggle flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-full bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
+            <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-primary font-semibold text-xs user-avatar-initial">?</div>
+            <span class="text-sm font-medium text-slate-700 user-display-name">...</span>
+            <span class="material-symbols-rounded text-slate-400 text-lg">expand_more</span>
+          </button>
+          <div class="user-menu">
+            <a href="profile.html">
+              <span class="material-symbols-rounded text-lg">person</span>
+              โปรไฟล์
+            </a>
+            <a href="settings.html">
+              <span class="material-symbols-rounded text-lg">settings</span>
+              ตั้งค่า
+            </a>
+            <div class="divider"></div>
+            <a href="#" class="danger" data-action="logout">
+              <span class="material-symbols-rounded text-lg">logout</span>
+              ออกจากระบบ
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <!-- Create Post (Collapsible) -->
+      <div class="mb-5">
+        <button id="create-post-toggle" class="btn-primary w-full sm:w-auto" onclick="document.getElementById('create-post-form').classList.toggle('hidden'); this.querySelector('.toggle-icon').textContent = document.getElementById('create-post-form').classList.contains('hidden') ? 'edit_square' : 'close'">
+          <span class="material-symbols-rounded text-lg toggle-icon">edit_square</span>
+          โพสต์หาเพื่อน
+        </button>
+
+        <div id="create-post-form" class="hidden mt-3 bg-white border border-slate-200/60 rounded-2xl p-5">
+          <!-- 4-col grid: avatar (rowspan all) | label | content | post button (rowspan 3) -->
+          <div class="grid grid-cols-[auto_auto_1fr_auto] gap-x-4 gap-y-3 items-center">
+
+            <!-- Avatar (spans all 4 rows: textarea + 3 form rows) -->
+            <div id="post-avatar" class="row-span-4 self-start w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-primary font-semibold text-sm flex-shrink-0 overflow-hidden">?</div>
+
+            <!-- Textarea row 1: spans label + content + button cols -->
+            <textarea id="post-text" rows="3" placeholder="เขียนอะไรสักหน่อย... เช่น หาเพื่อนกินข้าว หาคนคุย หาแฟน" class="col-span-3 w-full bg-slate-50 rounded-xl px-4 py-3 text-sm text-slate-700 border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none resize-none transition-colors"></textarea>
+
+            <!-- ข้อมูลส่วนตัว -->
+            <div class="text-xs text-slate-500 font-medium">ข้อมูลส่วนตัว</div>
+            <div class="info-bar flex items-center gap-2 flex-wrap min-w-0" id="info-bar">
+              <div class="info-bar-fields">
+                <input type="number" placeholder="อายุ" class="info-field" id="post-age" title="อายุ">
+                <span class="info-field-unit">ปี</span>
+                <span class="info-field-sep"></span>
+                <input type="number" placeholder="นน." class="info-field" id="post-weight" title="น้ำหนัก">
+                <span class="info-field-unit">กก.</span>
+                <span class="info-field-sep"></span>
+                <input type="number" placeholder="สูง" class="info-field" id="post-height" title="ส่วนสูง">
+                <span class="info-field-unit">ซม.</span>
+                <span class="info-field-sep"></span>
+                <select class="info-field info-field-select" id="post-role" title="บทบาท">
+                  <option value="">- บทบาท -</option>
+                  <option>รุก</option>
+                  <option>รับ</option>
+                  <option>โบ้ท</option>
+                  <option>ไบ</option>
+                  <option>ชายแท้</option>
+                </select>
+              </div>
+              <button type="button" class="info-bar-toggle" onclick="document.getElementById('info-bar').classList.toggle('info-bar-off')">
+                <span class="material-symbols-rounded text-sm icon-show">visibility</span>
+                <span class="material-symbols-rounded text-sm icon-hide">visibility_off</span>
+                <span class="toggle-text-show text-xs">แสดงในโพสต์</span>
+                <span class="toggle-text-hide text-xs">ไม่แสดงในโพสต์</span>
+              </button>
+            </div>
+
+            <!-- Post button (bottom-right, spans all 3 rows) -->
+            <button class="btn-primary !py-2 !px-4 !text-xs row-span-3 self-end" onclick="bizNetwork.createPost()">
+              <span class="material-symbols-rounded text-base">send</span>
+              โพสต์
+            </button>
+
+            <!-- ที่อยู่ตอนนี้ -->
+            <div class="text-xs text-slate-500 font-medium">ที่อยู่ตอนนี้</div>
+            <div>
+              <div id="post-province-wrap" class="relative inline-block">
+                <input type="hidden" id="post-province" value="">
+                <button type="button" id="post-province-btn" onclick="bizNetwork.togglePostProvinceMenu(event)" class="info-bar-province !mt-0">
+                  <span id="post-province-label" class="text-slate-400">— ไม่ระบุ —</span>
+                  <span class="material-symbols-rounded text-base ml-1">expand_more</span>
+                </button>
+                <div id="post-province-menu" class="hidden absolute left-0 top-full mt-1 w-64 bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-hidden">
+                  <div class="p-2 border-b border-slate-100">
+                    <input id="post-province-search" type="search" placeholder="ค้นหาจังหวัด..." class="w-full px-3 py-1.5 bg-slate-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                  </div>
+                  <div id="post-province-list" class="max-h-64 overflow-y-auto py-1"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- มองหา -->
+            <div class="text-xs text-slate-500 font-medium">มองหา</div>
+            <div class="flex flex-wrap items-center gap-2">
+              <label class="cursor-pointer">
+                <input type="checkbox" name="post-tag" value="หาเพื่อน" class="hidden peer">
+                <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาเพื่อน</span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="checkbox" name="post-tag" value="หาแฟน" class="hidden peer">
+                <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาแฟน</span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="checkbox" name="post-tag" value="หาคนคุย" class="hidden peer">
+                <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาคนคุย</span>
+              </label>
+              <label class="cursor-pointer">
+                <input type="checkbox" name="post-tag" value="หาเพื่อนเที่ยว" class="hidden peer">
+                <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาเพื่อนเที่ยว</span>
+              </label>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters Bar -->
+      <div class="flex items-center gap-2 mb-5 flex-wrap">
+        <!-- Province searchable dropdown -->
+        <div id="province-filter-wrap" class="relative">
+          <button type="button" id="province-filter-btn" onclick="bizNetwork.toggleProvinceMenu(event)" class="text-sm border border-slate-200 rounded-full px-3 py-2 bg-white text-slate-600 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-primary/20 flex items-center gap-1">
+            <span class="material-symbols-rounded text-base text-slate-400">location_on</span>
+            <span id="province-filter-label">ทุกจังหวัด</span>
+            <span class="material-symbols-rounded text-base">expand_more</span>
+          </button>
+          <div id="province-menu" class="hidden absolute left-0 top-full mt-1 w-64 bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-hidden">
+            <div class="p-2 border-b border-slate-100">
+              <input id="province-search" type="search" placeholder="ค้นหาจังหวัด..." class="w-full px-3 py-1.5 bg-slate-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+            </div>
+            <div id="province-list" class="max-h-64 overflow-y-auto py-1"></div>
+          </div>
+        </div>
+        <div class="flex items-center bg-white border border-slate-200 rounded-full overflow-hidden">
+          <button data-filter-tag="" onclick="bizNetwork.filterTag('')" class="filter-btn px-4 py-2 text-sm font-medium bg-primary text-white">ทั้งหมด</button>
+          <button data-filter-tag="หาเพื่อน" onclick="bizNetwork.filterTag('หาเพื่อน')" class="filter-btn px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50">หาเพื่อน</button>
+          <button data-filter-tag="หาแฟน" onclick="bizNetwork.filterTag('หาแฟน')" class="filter-btn px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50">หาแฟน</button>
+          <button data-filter-tag="หาคนคุย" onclick="bizNetwork.filterTag('หาคนคุย')" class="filter-btn px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50">หาคนคุย</button>
+        </div>
+        <div class="flex items-center bg-white border border-slate-200 rounded-full overflow-hidden">
+          <button data-filter-mode="favorites" onclick="bizNetwork.filterFavorites()" class="filter-btn px-4 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50 flex items-center gap-1"><span class="material-symbols-rounded text-base">favorite</span>เพื่อนที่ถูกใจ</button>
+        </div>
+        <span class="text-xs text-slate-400 ml-auto hide-mobile" id="post-total"></span>
+      </div>
+
+      <!-- Post List (dynamic) -->
+      <div class="flex flex-col gap-3" id="posts-list">
+        <div class="text-center py-8 text-slate-400">กำลังโหลดโพสต์...</div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="flex items-center justify-center gap-1 py-4" id="pagination"></div>
+    </div>
+    </div>
+  </main>
+
+  <!-- ===== Mobile Bottom Nav ===== -->
+  <nav class="bottom-nav">
+    <a href="network.html" class="nav-item active">
+      <span class="material-symbols-rounded">person_search</span>
+      หาเพื่อน
+    </a>
+    <a href="chat.html" class="nav-item">
+      <span class="relative inline-flex">
+        <span class="material-symbols-rounded">chat</span>
+        <span data-unread-badge class="hidden absolute -top-0.5 -right-1.5 min-w-[1.125rem] h-[1.125rem] px-1 rounded-full bg-red-500 text-white text-[0.65rem] font-bold flex items-center justify-center leading-none">0</span>
+      </span>
+      พูดคุย
+    </a>
+    <a href="profile.html" class="nav-item">
+      <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-primary font-semibold text-[0.55rem] user-avatar-initial">?</div>
+      โปรไฟล์
+    </a>
+  </nav>
+
+  <!-- ===== FAB (Mobile) ===== -->
+  <a href="#" class="fab" onclick="event.preventDefault(); document.getElementById('create-post-toggle').click(); window.scrollTo({top:0,behavior:'smooth'});">
+    <span class="material-symbols-rounded text-2xl">add</span>
+  </a>
+
+  <!-- ===== Toast ===== -->
+  <div id="toast" class="hidden fixed top-5 right-5 bg-white border border-slate-200 text-slate-800 text-sm px-4 py-3 rounded-xl shadow-xl z-[100] flex items-center gap-2 min-w-[16rem] max-w-sm"></div>
+
+  <!-- ===== Panic Button ===== -->
+  <a href="https://google.com" class="panic-btn" title="ออกด่วน">
+    <span class="material-symbols-rounded text-xl">emergency_home</span>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/network.js"></script>
+</body>
+</html>

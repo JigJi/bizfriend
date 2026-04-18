@@ -2,11 +2,428 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>bizfriend</title>
-  <meta http-equiv="refresh" content="0; url=network.html">
-  <script>window.location.replace('network.html');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===== SEO ===== -->
+  <title>FriendTa - หาเพื่อน</title>
+  <meta name="description" content="FriendTa — หาเพื่อนชายแบบส่วนตัว ไม่ต้องเปิดเผยตัวตน ใช้ผ่านเบราว์เซอร์ ไม่ต้องลงแอป ไม่มีไอคอนในมือถือ มีปุ่มออกฉุกเฉิน บล็อกได้ทันที">
+  <meta name="keywords" content="หาเพื่อน, หาเพื่อนชาย, หาเพื่อนเกย์, หาคนคุย, หาเพื่อนคุย, ชายรักชาย, เพื่อนชายไทย, เว็บหาเพื่อนเกย์, ชุมชนเพื่อนชาย">
+  <link rel="canonical" href="https://friendta.com/">
+  <meta name="robots" content="index, follow">
+
+  <!-- ===== Open Graph (Facebook, LINE share) ===== -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="th_TH">
+  <meta property="og:site_name" content="FriendTa">
+  <meta property="og:title" content="FriendTa — หาเพื่อนชาย ส่วนตัว ปลอดภัย">
+  <meta property="og:description" content="หาเพื่อนชายแบบส่วนตัว ไม่ต้องเปิดเผยตัวตน ใช้ผ่านเบราว์เซอร์ ไม่ต้องลงแอป">
+  <meta property="og:image" content="https://friendta.com/assets/img/landing-hero.webp">
+  <meta property="og:url" content="https://friendta.com/">
+
+  <!-- ===== Twitter Card ===== -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FriendTa — หาเพื่อนชาย ส่วนตัว ปลอดภัย">
+  <meta name="twitter:description" content="หาเพื่อนชายแบบส่วนตัว ไม่ต้องเปิดเผยตัวตน ใช้ผ่านเบราว์เซอร์">
+  <meta name="twitter:image" content="https://friendta.com/assets/img/landing-hero.webp">
+
+  <!-- ===== JSON-LD Structured Data ===== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "FriendTa",
+    "url": "https://friendta.com/",
+    "description": "ชุมชนสำหรับชายรักชาย หาเพื่อน หาคนคุย แบบส่วนตัว ไม่ต้องเปิดเผยตัวตน",
+    "inLanguage": "th-TH"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "FriendTa",
+    "url": "https://friendta.com/",
+    "logo": "https://friendta.com/assets/img/landing-hero.webp"
+  }
+  </script>
+
+  <!-- ===== Performance ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://liqjwpiypsvuyzxnydbu.supabase.co" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link rel="preload" as="image" href="assets/img/landing-hero.webp">
+
+  <!-- ===== Fonts + Icons ===== -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- ===== Tailwind ===== -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'IBM Plex Sans Thai', 'sans-serif'],
+          },
+          colors: {
+            primary: '#2563eb',
+            'primary-container': '#3b82f6',
+            secondary: '#fb7185',
+            'secondary-container': '#fda4af',
+            surface: '#f7f9fb',
+            'surface-low': '#f2f4f6',
+            'surface-high': '#e6e8ea',
+            'on-surface': '#191c1e',
+            'on-surface-variant': '#434655',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+    .thai-title { line-height: 1.4; }
+    .thai-body { line-height: 1.8; }
+    /* CSS phone mockup for safety section */
+    .phone-mockup {
+      background: linear-gradient(145deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 2.5rem;
+      padding: 0.75rem;
+      box-shadow:
+        0 32px 64px -12px rgba(37, 99, 235, 0.12),
+        0 0 0 1px rgba(0, 0, 0, 0.04);
+    }
+    .phone-screen {
+      background: #ffffff;
+      border-radius: 1.75rem;
+      overflow: hidden;
+      aspect-ratio: 9 / 16;
+      max-height: 600px;
+      position: relative;
+    }
+    .blur-img { filter: blur(12px); transition: filter 0.3s ease; }
+  </style>
 </head>
-<body>
-  <a href="network.html">ไปที่หน้าหาเพื่อน</a>
+
+<body class="bg-surface text-on-surface antialiased">
+
+  <!-- ====================== Top Nav ====================== -->
+  <header class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl shadow-sm shadow-blue-900/5">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center gap-8">
+        <a href="#top" class="text-2xl font-extrabold tracking-tighter">
+          <span style="color:#2563eb">Friend</span><span style="color:#fb7185">Ta</span>
+        </a>
+        <div class="hidden md:flex gap-6 font-medium text-sm">
+          <a href="#features" class="text-slate-600 hover:text-primary transition-colors">ฟีเจอร์</a>
+          <a href="#safety" class="text-slate-600 hover:text-primary transition-colors">ความปลอดภัย</a>
+          <a href="#how" class="text-slate-600 hover:text-primary transition-colors">วิธีใช้</a>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a id="nav-feed" href="network.html" class="hidden px-4 py-2 text-sm font-medium text-primary hover:bg-blue-50 rounded-xl transition-all duration-300 active:scale-95">หาเพื่อน →</a>
+        <a id="nav-login" href="login.html" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-xl transition-all duration-300 active:scale-95">เข้าสู่ระบบ</a>
+        <a id="nav-register" href="register.html" class="px-5 py-2 bg-primary text-white text-sm font-bold rounded-xl shadow-lg shadow-blue-500/20 hover:opacity-90 transition-all duration-300 active:scale-95">สมัครฟรี</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-24" id="top">
+
+    <!-- ====================== Hero ====================== -->
+    <section class="max-w-7xl mx-auto px-6 pt-6 lg:pt-10 flex flex-col items-center text-center">
+      <div class="inline-flex flex-col items-center mb-4">
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-3 leading-none">
+          <span style="color:#2563eb">Friend</span><span style="color:#fb7185">Ta</span>
+        </h1>
+        <p class="font-bold thai-title text-on-surface w-full text-center" style="font-size: clamp(0.625rem, 2.5vw, 1.625rem);">
+          หาเพื่อน <span class="text-slate-300 mx-1">|</span> หามิตรภาพ <span class="text-slate-300 mx-1">|</span> หาคนรู้ใจ
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-4 mb-3 mt-10">
+        <a href="register.html" class="px-10 py-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-2xl font-bold text-lg shadow-[0_24px_48px_-12px_rgba(37,99,235,0.3)] hover:shadow-[0_24px_48px_-12px_rgba(37,99,235,0.5)] transition-all duration-300 active:scale-95">
+          สมัครฟรี
+        </a>
+        <a href="login.html" class="px-10 py-4 bg-white text-on-surface rounded-2xl font-bold text-lg ring-1 ring-slate-200 hover:bg-slate-50 transition-all duration-300 active:scale-95">
+          เข้าสู่ระบบ
+        </a>
+      </div>
+      <div class="mb-12"></div>
+
+      <!-- Hero illustration -->
+      <div class="w-full max-w-5xl">
+        <picture>
+          <source srcset="assets/img/landing-hero.webp" type="image/webp">
+          <img src="assets/img/landing-hero.png"
+               alt="ชายสองคนคุยกันในเมือง — สื่อถึงการพบเพื่อนใหม่ที่ปลอดภัย"
+               width="1920" height="756"
+               class="w-full h-auto"
+               loading="eager"
+               fetchpriority="high">
+        </picture>
+      </div>
+    </section>
+
+    <!-- ====================== Why FriendTa (3 features) ====================== -->
+    <section id="features" class="bg-surface-low py-20 lg:py-28">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-extrabold thai-title">ทำไมต้อง <span style="color:#2563eb">Friend</span><span style="color:#fb7185">Ta</span></h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <!-- 1. No app -->
+          <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-500 group">
+            <div class="w-14 h-14 bg-blue-50 flex items-center justify-center rounded-2xl mb-6 group-hover:rotate-6 transition-transform">
+              <span class="material-symbols-outlined text-primary text-3xl">browse</span>
+            </div>
+            <h3 class="text-xl font-bold thai-title mb-3">ไม่ต้องลงแอป</h3>
+            <p class="text-sm text-on-surface-variant thai-body">ใช้ผ่านเบราว์เซอร์ ไม่มีไอคอนในมือถือให้ใครเห็น เปิด-ปิดได้ตลอด</p>
+          </div>
+
+          <!-- 2. Anonymous -->
+          <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-500 group">
+            <div class="w-14 h-14 bg-pink-50 flex items-center justify-center rounded-2xl mb-6 group-hover:rotate-6 transition-transform">
+              <span class="material-symbols-outlined text-secondary text-3xl">visibility_off</span>
+            </div>
+            <h3 class="text-xl font-bold thai-title mb-3">เป็นส่วนตัว 100%</h3>
+            <p class="text-sm text-on-surface-variant thai-body">ไม่ต้องใช้ชื่อจริง รูปจริง หรืออีเมลจริง — เปิดเผยเมื่อคุณพร้อม</p>
+          </div>
+
+          <!-- 3. Find by province -->
+          <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-500 group">
+            <div class="w-14 h-14 bg-blue-50 flex items-center justify-center rounded-2xl mb-6 group-hover:rotate-6 transition-transform">
+              <span class="material-symbols-outlined text-primary text-3xl">location_on</span>
+            </div>
+            <h3 class="text-xl font-bold thai-title mb-3">หาเพื่อนตามจังหวัด</h3>
+            <p class="text-sm text-on-surface-variant thai-body">กรองได้ครบ 77 จังหวัดทั่วไทย — เจอคนในพื้นที่ใกล้คุณ</p>
+          </div>
+
+          <!-- 4. Real-time chat -->
+          <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-500 group">
+            <div class="w-14 h-14 bg-pink-50 flex items-center justify-center rounded-2xl mb-6 group-hover:rotate-6 transition-transform">
+              <span class="material-symbols-outlined text-secondary text-3xl">forum</span>
+            </div>
+            <h3 class="text-xl font-bold thai-title mb-3">แชทเรียลไทม์</h3>
+            <p class="text-sm text-on-surface-variant thai-body">คุยทันที ไม่ต้องรอ ไม่ต้องโหลดใหม่</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== Safety Deep Dive ====================== -->
+    <section id="safety" class="py-20 lg:py-28 max-w-7xl mx-auto px-6">
+      <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+
+        <div class="lg:w-1/2">
+          <h2 class="text-3xl md:text-5xl font-extrabold thai-title mb-6" style="line-height: 1.5;">
+            ความปลอดภัย<br>
+            <span style="color:#2563eb">เป็นอันดับหนึ่ง</span>
+          </h2>
+          <div class="space-y-7 mt-10">
+            <div class="flex gap-5 items-start">
+              <div class="w-11 h-11 shrink-0 bg-blue-50 text-primary rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">blur_on</span>
+              </div>
+              <div>
+                <h4 class="text-lg font-bold thai-title mb-1">เบลอรูป (Stealth Blur)</h4>
+                <p class="text-sm text-on-surface-variant thai-body">เบลอรูปอัตโนมัติ ป้องกันคนรอบข้างมองเห็น — กดเปิด/ปิดได้ตลอด</p>
+              </div>
+            </div>
+
+            <div class="flex gap-5 items-start">
+              <div class="w-11 h-11 shrink-0 bg-red-50 text-red-600 rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emergency_home</span>
+              </div>
+              <div>
+                <h4 class="text-lg font-bold thai-title mb-1">ปุ่มออกฉุกเฉิน</h4>
+                <p class="text-sm text-on-surface-variant thai-body">กดทีเดียวเด้งไปหน้า Google ทันที — สถานการณ์ฉุกเฉินไม่ต้องคิด</p>
+              </div>
+            </div>
+
+            <div class="flex gap-5 items-start">
+              <div class="w-11 h-11 shrink-0 bg-pink-50 text-secondary rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">block</span>
+              </div>
+              <div>
+                <h4 class="text-lg font-bold thai-title mb-1">บล็อกผู้ใช้</h4>
+                <p class="text-sm text-on-surface-variant thai-body">ใครคุกคามคุณ บล็อกได้ทันที — เขาไม่เห็นคุณในระบบอีกเลย</p>
+              </div>
+            </div>
+
+            <div class="flex gap-5 items-start">
+              <div class="w-11 h-11 shrink-0 bg-blue-50 text-primary rounded-xl flex items-center justify-center">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">delete_forever</span>
+              </div>
+              <div>
+                <h4 class="text-lg font-bold thai-title mb-1">ลบบัญชีได้ตลอด</h4>
+                <p class="text-sm text-on-surface-variant thai-body">เปลี่ยนใจเมื่อไหร่ก็ได้ ข้อมูลทั้งหมดหายไปทันที</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Phone mockup (CSS-based) -->
+        <div class="lg:w-1/2 relative w-full max-w-sm mx-auto">
+          <div class="absolute -inset-8 bg-gradient-to-br from-blue-100/40 via-pink-100/40 to-blue-100/40 rounded-[3rem] blur-3xl"></div>
+          <div class="relative phone-mockup">
+            <div class="phone-screen">
+              <!-- Mock chat header -->
+              <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100 bg-white">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center text-secondary font-bold text-xs">?</div>
+                  <div>
+                    <div class="text-sm font-semibold">คนที่คุณคุย</div>
+                    <div class="text-[10px] text-slate-400">ออนไลน์</div>
+                  </div>
+                </div>
+                <span class="material-symbols-outlined text-slate-400 text-lg">more_vert</span>
+              </div>
+              <!-- Mock chat body -->
+              <div class="px-4 py-5 space-y-3 bg-surface flex-1">
+                <div class="flex">
+                  <div class="bg-white rounded-2xl rounded-tl-sm px-4 py-2 max-w-[75%] shadow-sm">
+                    <p class="text-xs">สวัสดีครับ ยินดีที่ได้รู้จัก</p>
+                  </div>
+                </div>
+                <div class="flex justify-end">
+                  <div class="bg-primary text-white rounded-2xl rounded-tr-sm px-4 py-2 max-w-[75%] shadow-sm">
+                    <p class="text-xs">สวัสดีครับ คุยอะไรกันดี</p>
+                  </div>
+                </div>
+                <!-- Blurred image example -->
+                <div class="flex">
+                  <div class="bg-white rounded-2xl rounded-tl-sm p-1.5 shadow-sm">
+                    <div class="w-32 h-32 rounded-xl bg-gradient-to-br from-blue-200 via-pink-200 to-blue-300" style="filter: blur(8px);"></div>
+                  </div>
+                </div>
+                <p class="text-[10px] text-center text-slate-400 italic">— รูปภาพถูกเบลออัตโนมัติ —</p>
+              </div>
+              <!-- Mock input -->
+              <div class="px-4 py-3 border-t border-slate-100 flex items-center gap-2 bg-white">
+                <div class="flex-1 bg-slate-50 rounded-full px-3 py-2 text-xs text-slate-400">พิมพ์ข้อความ...</div>
+                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-white text-base">send</span>
+                </div>
+              </div>
+            </div>
+            <!-- Floating panic button -->
+            <div class="absolute -right-4 -top-4 w-14 h-14 rounded-full bg-red-500 text-white flex items-center justify-center shadow-xl shadow-red-500/30 animate-pulse">
+              <span class="material-symbols-outlined text-2xl">emergency_home</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================== How it works ====================== -->
+    <section id="how" class="bg-surface-low py-20 lg:py-28">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-5xl font-extrabold thai-title mb-4">เริ่มใช้ใน 3 ขั้นตอน</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-8 rounded-2xl text-center">
+            <div class="w-12 h-12 mx-auto rounded-full bg-blue-50 text-primary flex items-center justify-center font-bold text-lg mb-4">1</div>
+            <h3 class="text-lg font-bold thai-title mb-2">สมัครใน 30 วินาที</h3>
+            <p class="text-sm text-on-surface-variant thai-body">ใช้อีเมลอะไรก็ได้ — ไม่ต้องเป็นอีเมลจริง</p>
+          </div>
+          <div class="bg-white p-8 rounded-2xl text-center">
+            <div class="w-12 h-12 mx-auto rounded-full bg-pink-50 text-secondary flex items-center justify-center font-bold text-lg mb-4">2</div>
+            <h3 class="text-lg font-bold thai-title mb-2">หาเพื่อนชายในจังหวัดคุณ</h3>
+            <p class="text-sm text-on-surface-variant thai-body">เลือกจังหวัด ดูโปรไฟล์ ที่ถูกใจ</p>
+          </div>
+          <div class="bg-white p-8 rounded-2xl text-center">
+            <div class="w-12 h-12 mx-auto rounded-full bg-blue-50 text-primary flex items-center justify-center font-bold text-lg mb-4">3</div>
+            <h3 class="text-lg font-bold thai-title mb-2">แชทแบบส่วนตัว</h3>
+            <p class="text-sm text-on-surface-variant thai-body">คุยทันที — เปิดเผยตัวตนเมื่อคุณพร้อม</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== Bottom CTA ====================== -->
+    <section class="py-20 lg:py-28 bg-white">
+      <div class="max-w-4xl mx-auto px-6 text-center">
+        <div class="bg-gradient-to-br from-primary to-blue-700 p-12 md:p-20 rounded-[3rem] shadow-2xl shadow-blue-500/20 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+          <div class="absolute bottom-0 left-0 w-64 h-64 bg-pink-300/10 rounded-full -ml-32 -mb-32 blur-3xl"></div>
+          <h2 class="text-3xl md:text-5xl font-extrabold text-white thai-title mb-4 relative z-10">
+            พร้อมหาเพื่อนชายในแบบของคุณ?
+          </h2>
+          <p class="text-base md:text-lg text-blue-100 thai-body mb-10 relative z-10">เริ่มฟรี · ไม่ต้องเปิดเผยตัวตน · ลบบัญชีได้ตลอด</p>
+          <a href="register.html" class="inline-flex items-center gap-3 px-12 py-5 bg-white text-primary font-bold text-lg rounded-2xl hover:scale-105 active:scale-95 transition-all duration-300 relative z-10 shadow-xl">
+            เริ่มหาเพื่อนเลย
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================== Footer ====================== -->
+  <footer class="w-full py-10 px-6 bg-surface-low">
+    <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-lg font-extrabold tracking-tighter">
+          <span style="color:#2563eb">Friend</span><span style="color:#fb7185">Ta</span>
+        </span>
+        <span class="text-xs text-slate-500">© 2026 — หาเพื่อนชาย</span>
+      </div>
+      <div class="flex gap-6 text-xs text-slate-500">
+        <a href="terms.html" class="hover:text-primary transition-colors">ข้อกำหนด</a>
+        <a href="privacy.html" class="hover:text-primary transition-colors">ความเป็นส่วนตัว</a>
+        <a href="contact.html" class="hover:text-primary transition-colors">ติดต่อ</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Async session check: ถ้า login อยู่ → swap nav buttons (ไม่ redirect รบกวน landing) ===== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase.js"></script>
+  <script>
+    (async function () {
+      var session = await window.bizGetSession();
+      if (session) {
+        document.getElementById('nav-feed').classList.remove('hidden');
+        document.getElementById('nav-login').style.display = 'none';
+        document.getElementById('nav-register').style.display = 'none';
+      }
+    })();
+  </script>
+
+  <!-- ===== TODO before launch: paste real IDs ===== -->
+  <!-- Google Analytics 4 -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <!-- Google Ads conversion tracking -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-XXXXXXXX');
+  </script> -->
+
 </body>
 </html>

@@ -26,10 +26,9 @@
     }
 
     if (session) {
-      // Run sync + UI update in parallel using shared profile cache
       var profile = await window.bizGetProfile(session.user.id);
       if (profile) {
-        syncProfileFromProvider(session.user, profile); // fire-and-forget, no await
+        syncProfileFromProvider(session.user, profile);
         updateUserUI(session.user, profile);
       }
     }

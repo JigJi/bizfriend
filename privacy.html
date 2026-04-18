@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>นโยบายความเป็นส่วนตัว — FriendTa</title>
+  <meta name="description" content="นโยบายความเป็นส่วนตัวของ FriendTa — เราเก็บข้อมูลอะไร ใช้ทำอะไร และสิทธิ์ของคุณตาม PDPA">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://friendta.com/privacy.html">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'IBM Plex Sans Thai', 'sans-serif'] },
+          colors: {
+            primary: '#2563eb',
+            'primary-container': '#3b82f6',
+            secondary: '#fb7185',
+            surface: '#f7f9fb',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', 'IBM Plex Sans Thai', sans-serif; }
+    .prose-thai { line-height: 1.85; }
+    .prose-thai h2 { font-size: 1.5rem; font-weight: 800; margin-top: 2.5rem; margin-bottom: 1rem; color: #0f172a; }
+    .prose-thai h3 { font-size: 1.125rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #1e293b; }
+    .prose-thai p { margin-bottom: 1rem; color: #334155; }
+    .prose-thai ul { margin-bottom: 1rem; padding-left: 1.5rem; list-style: disc; color: #334155; }
+    .prose-thai ul li { margin-bottom: 0.5rem; }
+    .prose-thai a { color: #2563eb; text-decoration: underline; }
+    .prose-thai strong { font-weight: 700; color: #0f172a; }
+  </style>
+</head>
+
+<body class="bg-surface text-slate-800 antialiased">
+
+  <!-- Header -->
+  <header class="border-b border-slate-200 bg-white">
+    <nav class="flex justify-between items-center max-w-4xl mx-auto px-6 py-4">
+      <a href="index.html" class="text-xl font-extrabold tracking-tighter">
+        <span style="color:#2563eb">Friend</span><span style="color:#fb7185">Ta</span>
+      </a>
+      <a href="index.html" class="text-sm text-slate-600 hover:text-primary transition-colors">← กลับหน้าหลัก</a>
+    </nav>
+  </header>
+
+  <!-- Content -->
+  <main class="max-w-3xl mx-auto px-6 py-12 lg:py-16">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-3">นโยบายความเป็นส่วนตัว</h1>
+    <p class="text-sm text-slate-500 mb-10">ปรับปรุงล่าสุด: 18 เมษายน 2026</p>
+
+    <div class="prose-thai">
+
+      <p>FriendTa ("เรา", "ของเรา") เคารพความเป็นส่วนตัวของผู้ใช้ทุกคน นโยบายนี้อธิบายว่าเราเก็บข้อมูลอะไร ใช้ทำอะไร และคุณมีสิทธิ์อะไรบ้างตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA)</p>
+
+      <h2>1. ข้อมูลที่เราเก็บ</h2>
+
+      <h3>1.1 ข้อมูลที่คุณให้เราตอนสมัครและใช้งาน</h3>
+      <ul>
+        <li><strong>อีเมล + รหัสผ่าน</strong> — ใช้สำหรับเข้าสู่ระบบ (รหัสผ่านถูก hash ก่อนเก็บ ไม่มีใครเห็นได้ แม้แต่ตัวระบบเอง)</li>
+        <li><strong>ข้อมูลโปรไฟล์</strong> — ชื่อที่แสดง, bio, รูปโปรไฟล์, รูปภาพปก, รูปอื่นๆ, อายุ, น้ำหนัก, ส่วนสูง, บทบาท, จังหวัด, การศึกษา, อาชีพ, ภาษา (ทั้งหมดเป็นข้อมูลที่คุณเลือกใส่เอง — ไม่ใส่ก็ได้)</li>
+        <li><strong>โพสต์และข้อความ</strong> — เนื้อหาโพสต์ของคุณ, ข้อความแชทระหว่างคุณกับผู้ใช้คนอื่น</li>
+        <li><strong>การโต้ตอบ</strong> — รายชื่อเพื่อนที่ถูกใจ (favorites), ผู้ใช้ที่คุณบล็อก</li>
+      </ul>
+
+      <h3>1.2 ข้อมูลทางเทคนิค</h3>
+      <ul>
+        <li><strong>Session token</strong> — เก็บใน localStorage ของเบราว์เซอร์เพื่อให้ไม่ต้อง login ใหม่ทุกครั้ง</li>
+        <li><strong>IP address</strong> — Supabase (ผู้ให้บริการฐานข้อมูล) อาจเก็บไว้ชั่วคราวเพื่อ rate limiting และความปลอดภัย</li>
+      </ul>
+
+      <p><strong>เราไม่เก็บ:</strong> เบอร์โทรศัพท์, รายชื่อเพื่อน Facebook/LINE, ข้อมูลตำแหน่งที่แม่นยำ (เก็บแค่จังหวัดที่คุณเลือกเอง), หมายเลขบัตรประชาชน</p>
+
+      <h2>2. เราใช้ข้อมูลของคุณทำอะไร</h2>
+      <ul>
+        <li>ให้บริการเว็บไซต์ — แสดงโปรไฟล์, ส่งข้อความ, แสดงโพสต์ในหน้า feed</li>
+        <li>กรองและค้นหา — ให้คุณค้นหาเพื่อนตามจังหวัดและ tag ที่คุณเลือก</li>
+        <li>ความปลอดภัย — ตรวจจับ spam, abuse, การคุกคาม</li>
+        <li>ปรับปรุงบริการ — วิเคราะห์การใช้งานในภาพรวม (ไม่ระบุตัวบุคคล)</li>
+      </ul>
+
+      <p>เรา <strong>ไม่ใช้</strong> ข้อมูลของคุณเพื่อการโฆษณา ไม่ขายข้อมูลให้บุคคลที่สาม</p>
+
+      <h2>3. การแชร์ข้อมูลกับบุคคลที่สาม</h2>
+      <p>เราใช้บริการของผู้ให้บริการต่อไปนี้ในการรันระบบ:</p>
+      <ul>
+        <li><strong>Supabase</strong> (สหรัฐอเมริกา/EU) — ฐานข้อมูล, ระบบ authentication, file storage</li>
+        <li><strong>Google OAuth</strong> — สำหรับการเข้าสู่ระบบด้วย Google (เฉพาะถ้าคุณเลือกใช้)</li>
+        <li><strong>Cloudflare / Hosting</strong> — สำหรับการให้บริการเว็บไซต์</li>
+      </ul>
+      <p>ผู้ให้บริการเหล่านี้เป็น <em>data processor</em> เท่านั้น — ใช้ข้อมูลตามคำสั่งของเรา ไม่ได้ใช้เพื่อวัตถุประสงค์อื่น</p>
+
+      <p>เรา <strong>ไม่ขาย ไม่แชร์</strong> ข้อมูลของคุณกับบริษัทโฆษณา, นายหน้าข้อมูล, หรือบุคคลที่สามอื่นใด เว้นแต่ได้รับคำสั่งจากศาลตามกฎหมายไทย</p>
+
+      <h2>4. ระยะเวลาเก็บข้อมูล</h2>
+      <ul>
+        <li>ข้อมูลบัญชีและโปรไฟล์ — เก็บตราบที่บัญชียังใช้งาน</li>
+        <li>ข้อความแชท — เก็บตราบที่คุณและคู่สนทนายังไม่ลบ</li>
+        <li>เมื่อคุณลบบัญชี — ข้อมูลทั้งหมดจะถูกลบจากระบบของเราทันที (Supabase อาจยังเก็บ backup ไว้ระยะหนึ่งตามนโยบายของเขา)</li>
+      </ul>
+
+      <h2>5. สิทธิ์ของคุณตาม PDPA</h2>
+      <p>ในฐานะเจ้าของข้อมูล คุณมีสิทธิ์:</p>
+      <ul>
+        <li><strong>เข้าถึง</strong> — ขอสำเนาข้อมูลของคุณที่เราเก็บ</li>
+        <li><strong>แก้ไข</strong> — แก้ไขข้อมูลของคุณได้ตลอดเวลาในหน้าโปรไฟล์</li>
+        <li><strong>ลบ</strong> — ลบบัญชีและข้อมูลทั้งหมดได้ตลอดเวลาในหน้าตั้งค่า</li>
+        <li><strong>ถอนความยินยอม</strong> — ออกจากระบบและลบบัญชีได้ทุกเมื่อ</li>
+        <li><strong>ร้องเรียน</strong> — ติดต่อสำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล หากเห็นว่าเราละเมิดสิทธิ์</li>
+      </ul>
+
+      <h2>6. ความปลอดภัย</h2>
+      <ul>
+        <li>การเชื่อมต่อทั้งหมดผ่าน HTTPS (เข้ารหัสระหว่างคุณกับเซิร์ฟเวอร์)</li>
+        <li>รหัสผ่านถูก hash ด้วยอัลกอริทึมมาตรฐานก่อนเก็บ</li>
+        <li>ข้อมูลของผู้ใช้แต่ละคนถูกแยกด้วย Row Level Security (RLS) — ผู้ใช้คนหนึ่งดูข้อมูลของคนอื่นไม่ได้ ยกเว้นที่ผู้นั้นเปิดเผยเอง</li>
+        <li>เราไม่สามารถรับประกันความปลอดภัย 100% ได้ แต่เราใช้แนวปฏิบัติที่ดีที่สุดในอุตสาหกรรม</li>
+      </ul>
+
+      <h2>7. อายุขั้นต่ำ</h2>
+      <p>FriendTa ใช้ได้สำหรับผู้ที่มีอายุ <strong>18 ปีขึ้นไป</strong> เท่านั้น หากเราพบว่าผู้ใช้อายุต่ำกว่า 18 ปี เราจะลบบัญชีทันที</p>
+
+      <h2>8. การเปลี่ยนแปลงนโยบาย</h2>
+      <p>เราอาจปรับปรุงนโยบายนี้ได้ในอนาคต หากมีการเปลี่ยนแปลงสำคัญ เราจะแจ้งคุณผ่านอีเมลหรือประกาศบนเว็บไซต์</p>
+
+      <h2>9. ติดต่อเรา</h2>
+      <p>ทีมงาน FriendTa</p>
+      <p>อีเมล: <a href="mailto:support@friendta.com">support@friendta.com</a></p>
+      <p>หากมีคำถามเรื่องความเป็นส่วนตัว, ขอสำเนาข้อมูล, หรือต้องการลบข้อมูลแบบติดต่อโดยตรง — ส่งอีเมลมาที่ที่อยู่ข้างต้น เราจะตอบกลับภายใน 7 วันทำการ</p>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 py-8 px-6 mt-12">
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+      <span>© 2026 FriendTa — หาเพื่อนชาย</span>
+      <div class="flex gap-6">
+        <a href="terms.html" class="hover:text-primary transition-colors">ข้อกำหนด</a>
+        <a href="privacy.html" class="hover:text-primary transition-colors">ความเป็นส่วนตัว</a>
+        <a href="contact.html" class="hover:text-primary transition-colors">ติดต่อ</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

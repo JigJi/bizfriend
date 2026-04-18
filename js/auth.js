@@ -5,8 +5,8 @@
 (function () {
   'use strict';
 
-  // Pages ที่ไม่ต้อง login
-  var publicPages = ['login.html', 'register.html'];
+  // Pages ที่ไม่ต้อง login — รองรับทั้ง .html และ clean URL (Cloudflare Pages auto-strip .html)
+  var publicPages = ['login.html', 'register.html', 'login', 'register'];
 
   // ===== Auth State Check =====
   async function checkAuth() {
@@ -139,7 +139,7 @@
   supabaseClient.auth.onAuthStateChange(function (event, session) {
     if (event === 'SIGNED_OUT') {
       var current = window.location.pathname.split('/').pop() || 'index.html';
-      var publicOrIndex = ['login.html', 'register.html', 'index.html', ''];
+      var publicOrIndex = ['login.html', 'register.html', 'index.html', '', 'login', 'register', 'index'];
       if (publicOrIndex.indexOf(current) === -1) {
         window.location.href = 'login.html';
       }

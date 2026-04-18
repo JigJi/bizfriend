@@ -122,28 +122,6 @@ body.blur-off .blur-toggle .icon-off {
   color: #004ac6;
 }
 
-/* --- Panic Button (สัญลักษณ์ทางหนีไฟ — ISO 7010 green) --- */
-.panic-btn {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 9999;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 9999px;
-  background: #00853e;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 133, 62, 0.4);
-  text-decoration: none;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.panic-btn:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(0, 133, 62, 0.5);
-}
 
 /* --- Custom Scrollbar --- */
 .custom-scrollbar::-webkit-scrollbar {
@@ -509,10 +487,6 @@ body.blur-off .blur-toggle .icon-off {
   }
   .fab {
     display: flex;
-  }
-  .panic-btn {
-    bottom: 5rem;
-    right: 1rem;
   }
   .hide-mobile {
     display: none !important;

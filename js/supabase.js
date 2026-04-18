@@ -2,10 +2,19 @@
    bizfriend - Supabase Client
    ============================================ */
 
-const SUPABASE_URL = 'https://liqjwpiypsvuyzxnydbu.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpcWp3cGl5cHN2dXl6eG55ZGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxODE5MDAsImV4cCI6MjA4OTc1NzkwMH0.OgC554g98_A-pfjCjw53atGxtW1vAza5BxvgdcE9qtI';
+// Environment detection — localhost → local Supabase (Docker), else → cloud production
+const IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+const SUPABASE_URL = IS_LOCAL
+  ? 'http://127.0.0.1:54321'
+  : 'https://liqjwpiypsvuyzxnydbu.supabase.co';
+
+const SUPABASE_ANON_KEY = IS_LOCAL
+  ? 'sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH'
+  : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpcWp3cGl5cHN2dXl6eG55ZGJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxODE5MDAsImV4cCI6MjA4OTc1NzkwMH0.OgC554g98_A-pfjCjw53atGxtW1vAza5BxvgdcE9qtI';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+console.log('[FriendTa] env:', IS_LOCAL ? 'LOCAL (test)' : 'PRODUCTION', '→', SUPABASE_URL);
 
 // แปล error จาก Supabase เป็นภาษาไทย (fallback เป็นข้อความเดิมถ้าไม่รู้จัก)
 var BIZ_ERR_MAP = {

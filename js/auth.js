@@ -186,7 +186,12 @@
     var { error } = await supabaseClient.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: window.location.origin + '/network.html'
+        redirectTo: window.location.origin + '/network.html',
+        // บังคับให้ Google แสดง account chooser ทุกครั้ง — กัน auto-login จาก
+        // cookie บัญชีเดิม ที่ user มือถือเจอว่าข้ามไปหน้า network ทันที
+        queryParams: {
+          prompt: 'select_account'
+        }
       }
     });
     if (error) return { error: window.bizErr(error) };

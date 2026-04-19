@@ -709,3 +709,296 @@ body.blur-off .blur-toggle .icon-off {
   opacity: 1;
   transform: translateX(0);
 }
+
+/* --- Report Dialog buttons --- */
+.report-reason-btn {
+  text-align: left;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.report-reason-btn:hover {
+  background: #eff6ff;
+  border-color: rgba(37, 99, 235, 0.3);
+}
+html.dark .report-reason-btn {
+  background: #334155 !important;
+  color: #e2e8f0;
+}
+html.dark .report-reason-btn:hover {
+  background: rgba(37, 99, 235, 0.2) !important;
+  border-color: #60a5fa;
+}
+
+/* Opened dialog shows as flex */
+#report-dialog:not(.hidden) {
+  display: flex !important;
+}
+
+/* ============================================
+   Dark Mode (toggle via html.dark)
+   ============================================
+   CSS overrides strategy: Tailwind CDN ใช้ class-based ไม่ compile
+   ไม่สามารถเพิ่ม dark: variant บน 100+ elements ได้สะดวก → override
+   ด้วย !important เจาะเฉพาะคลาสที่ใช้ถี่ ~85% coverage
+   ============================================ */
+
+/* Theme toggle button (pattern เดียวกับ .blur-toggle) */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+.theme-toggle:hover {
+  background: #f8fafc;
+}
+.theme-toggle .icon-sun,
+.theme-toggle .icon-moon {
+  position: absolute;
+  font-size: 1.25rem;
+  color: #64748b;
+  transition: opacity 0.15s ease;
+}
+.theme-toggle .icon-moon {
+  opacity: 0;
+}
+html.dark .theme-toggle {
+  background: #1e293b;
+  border-color: #475569;
+}
+html.dark .theme-toggle:hover {
+  background: #334155;
+}
+html.dark .theme-toggle .icon-sun {
+  opacity: 0;
+}
+html.dark .theme-toggle .icon-moon {
+  opacity: 1;
+  color: #fbbf24;
+}
+
+/* Body + page backgrounds */
+html.dark body {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+html.dark .bg-surface,
+html.dark .bg-surface-low {
+  background: #0f172a !important;
+}
+
+/* Card / panel backgrounds */
+html.dark .bg-white {
+  background-color: #1e293b !important;
+}
+html.dark .bg-slate-50 {
+  background-color: #334155 !important;
+}
+html.dark .bg-slate-100 {
+  background-color: #475569 !important;
+}
+html.dark .bg-slate-200 {
+  background-color: #64748b !important;
+}
+
+/* Subtle tinted backgrounds (badges, hover) */
+html.dark .bg-blue-50 {
+  background-color: rgba(37, 99, 235, 0.18) !important;
+}
+html.dark .bg-blue-100 {
+  background-color: rgba(37, 99, 235, 0.28) !important;
+}
+html.dark .bg-red-50 {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+}
+html.dark .bg-green-50 {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+}
+html.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+}
+
+/* Text colors */
+html.dark .text-slate-900,
+html.dark .text-slate-800 {
+  color: #e2e8f0 !important;
+}
+html.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+html.dark .text-slate-600,
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+html.dark .text-slate-400 {
+  color: #64748b !important;
+}
+html.dark .text-slate-300 {
+  color: #475569 !important;
+}
+html.dark .text-primary {
+  color: #60a5fa !important;  /* brighter blue สำหรับ contrast บน dark bg */
+}
+
+/* Primary colors in tinted variants (red-600, amber-600 etc stay) */
+html.dark .text-red-600 { color: #f87171 !important; }
+html.dark .text-green-700 { color: #4ade80 !important; }
+html.dark .text-green-800 { color: #4ade80 !important; }
+html.dark .text-amber-800 { color: #fbbf24 !important; }
+
+/* Borders */
+html.dark .border-slate-200,
+html.dark .border-slate-200\/60 {
+  border-color: #334155 !important;
+}
+html.dark .border-slate-100 {
+  border-color: #1e293b !important;
+}
+html.dark .border-red-200 { border-color: rgba(239, 68, 68, 0.3) !important; }
+html.dark .border-green-200 { border-color: rgba(34, 197, 94, 0.3) !important; }
+html.dark .border-amber-200 { border-color: rgba(245, 158, 11, 0.3) !important; }
+
+/* Inputs: placeholder + focus bg */
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #64748b !important;
+}
+html.dark input:focus,
+html.dark textarea:focus {
+  background-color: #1e293b !important;
+}
+
+/* Blur toggle in dark mode */
+html.dark .blur-toggle {
+  background: #1e293b;
+  border-color: #475569;
+}
+html.dark .blur-toggle:hover {
+  background: #334155;
+}
+html.dark .blur-toggle .icon-on,
+html.dark .blur-toggle .icon-off {
+  color: #cbd5e1 !important;
+}
+html.dark body.blur-off .blur-toggle {
+  background: rgba(37, 99, 235, 0.2);
+  border-color: #60a5fa;
+}
+
+/* Chat bubbles */
+html.dark .chat-bubble.received {
+  background: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+/* LOCAL DEV badge bg contrast (orange ดูแสบตาน้อยลงบน dark) */
+html.dark [data-presence-dot] {
+  border-color: #1e293b !important;
+}
+
+/* Bottom nav (mobile) */
+html.dark .bottom-nav {
+  background: #1e293b !important;
+  border-top-color: #334155 !important;
+}
+
+/* Sidebar nav (desktop) + chat list item hover */
+html.dark .sidebar-nav {
+  background: #0f172a !important;
+  border-right-color: #1e293b !important;
+}
+html.dark .chat-list-item:hover {
+  background: #334155 !important;
+}
+html.dark .chat-list-item.active {
+  background: rgba(37, 99, 235, 0.2) !important;
+}
+
+/* Custom components ที่มี bg/color hardcoded ใน CSS (ไม่ผ่าน Tailwind utility) */
+html.dark .btn-secondary {
+  background: #334155;
+  color: #e2e8f0;
+  border-color: #475569;
+}
+html.dark .btn-secondary:hover {
+  background: #475569;
+}
+html.dark .info-bar-fields {
+  background: #334155;
+  border-color: #475569;
+}
+html.dark .info-field {
+  color: #e2e8f0;
+}
+html.dark .info-field::placeholder {
+  color: #64748b;
+}
+html.dark .info-field-unit {
+  color: #94a3b8;
+}
+html.dark .info-field-sep {
+  background: #475569;
+}
+html.dark .info-bar-province {
+  background: #334155;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+html.dark .user-menu {
+  background: #1e293b !important;
+  border-color: #334155;
+}
+html.dark .user-menu a {
+  color: #e2e8f0;
+}
+html.dark .user-menu a:hover {
+  background: #334155;
+}
+html.dark .user-menu .divider {
+  background: #334155;
+}
+
+/* Badges — invert to darker + brighter text */
+html.dark .badge-blue { background: rgba(37, 99, 235, 0.2); color: #60a5fa; }
+html.dark .badge-green { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+html.dark .badge-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+html.dark .badge-red { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+html.dark .badge-slate { background: #334155; color: #cbd5e1; }
+
+/* Data table (admin-ish, low priority but for consistency) */
+html.dark .data-table thead th { background: #1e293b; color: #94a3b8; border-bottom-color: #334155; }
+html.dark .data-table tbody td { color: #cbd5e1; border-bottom-color: #1e293b; }
+html.dark .data-table tbody tr:hover { background: #334155; }
+
+/* Profile avatar ring (white border ขาวรอบ avatar → ใช้ dark bg border บน dark) */
+html.dark .profile-avatar-lg {
+  border-color: #1e293b;
+  background: #334155;
+}
+
+/* Report dialog (modal bg ปัจจุบัน bg-white → covered), แต่ดูแล contrast */
+html.dark #report-dialog > div {
+  background: #1e293b !important;
+  color: #e2e8f0;
+}
+
+/* Dropdown menus (status, province, etc.) */
+html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+html.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}

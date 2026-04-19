@@ -156,7 +156,22 @@ window.bizSetupPresence = async function () {
 // เริ่ม presence ทันทีที่หน้าโหลด (ถ้ามี session)
 document.addEventListener('DOMContentLoaded', function () {
   window.bizSetupPresence();
+  initThemeToggle();
 });
+
+// ============================================
+// Theme Toggle (dark/light)
+// ============================================
+// Early-apply script ใน <head> ของทุก HTML จัดการใส่ class="dark" แล้ว
+// function นี้แค่ wire ปุ่ม toggle ที่มีใน header ของหน้า authenticated
+function initThemeToggle() {
+  document.querySelectorAll('.theme-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+  });
+}
 
 // 77 จังหวัดของไทย (shared — ใช้ใน network + profile)
 window.BIZ_PROVINCES = [

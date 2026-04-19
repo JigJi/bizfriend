@@ -10,6 +10,7 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
   <title>FriendTa - โปรไฟล์</title>
   <style>body{font-family:'Inter','LINE Seed Sans TH',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
+    <script>(function(){var t=localStorage.getItem("theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")})();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,6 +61,7 @@
         <span class="logo-font text-xl"><img src="/assets/img/logo.png" alt="FriendTa" class="brand-logo"></span>
       </div>
       <div class="flex items-center gap-2">
+        <button class="theme-toggle" aria-label="สลับโหมดมืด/สว่าง" title="มืด/สว่าง"><span class="material-symbols-rounded icon-sun">light_mode</span><span class="material-symbols-rounded icon-moon">dark_mode</span></button>
         <button class="blur-toggle" aria-label="เปิด/ปิด blur รูปภาพ" title="เปิด/ปิด blur รูปภาพ">
           <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
           <span class="material-symbols-rounded icon-off">visibility</span>
@@ -77,6 +79,7 @@
         <p class="text-sm text-slate-500 mt-0.5">จัดการโปรไฟล์ของคุณ</p>
       </div>
       <div class="flex items-center gap-3">
+        <button class="theme-toggle" aria-label="สลับโหมดมืด/สว่าง" title="มืด/สว่าง"><span class="material-symbols-rounded icon-sun">light_mode</span><span class="material-symbols-rounded icon-moon">dark_mode</span></button>
         <button class="blur-toggle" aria-label="เปิด/ปิด blur รูปภาพ" title="เปิด/ปิด blur รูปภาพ">
           <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
           <span class="material-symbols-rounded icon-off">visibility</span>

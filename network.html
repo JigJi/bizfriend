@@ -10,6 +10,7 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
   <title>FriendTa - หาเพื่อน</title>
   <style>body{font-family:'Inter','LINE Seed Sans TH',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
+    <script>(function(){var t=localStorage.getItem("theme");if(t==="dark"||(!t&&window.matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")})();</script>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,6 +61,7 @@
         <span class="logo-font text-xl"><img src="/assets/img/logo.png" alt="FriendTa" class="brand-logo"></span>
       </div>
       <div class="flex items-center gap-2">
+        <button class="theme-toggle" aria-label="สลับโหมดมืด/สว่าง" title="มืด/สว่าง"><span class="material-symbols-rounded icon-sun">light_mode</span><span class="material-symbols-rounded icon-moon">dark_mode</span></button>
         <button class="blur-toggle" aria-label="เปิด/ปิด blur รูปภาพ" title="เปิด/ปิด blur รูปภาพ">
           <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
           <span class="material-symbols-rounded icon-off">visibility</span>
@@ -74,6 +76,7 @@
         <p class="text-sm text-slate-500 mt-0.5">โพสต์หาเพื่อน หาคนคุย หาคนเจอ</p>
       </div>
       <div class="hide-mobile flex items-center gap-3">
+        <button class="theme-toggle" aria-label="สลับโหมดมืด/สว่าง" title="มืด/สว่าง"><span class="material-symbols-rounded icon-sun">light_mode</span><span class="material-symbols-rounded icon-moon">dark_mode</span></button>
         <button class="blur-toggle" aria-label="เปิด/ปิด blur รูปภาพ" title="เปิด/ปิด blur รูปภาพ">
           <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
           <span class="material-symbols-rounded icon-off">visibility</span>
@@ -263,6 +266,22 @@
 
   <!-- ===== Toast ===== -->
   <div id="toast" class="hidden fixed top-5 right-5 bg-white border border-slate-200 text-slate-800 text-sm px-4 py-3 rounded-xl shadow-xl z-[100] flex items-center gap-2 min-w-[16rem] max-w-sm"></div>
+
+  <!-- ===== Report Dialog (shared, hidden until opened) ===== -->
+  <div id="report-dialog" class="hidden fixed inset-0 z-[100] items-center justify-center p-4" style="background:rgba(0,0,0,0.5);" onclick="bizNetwork.closeReportDialog(event)">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5">
+      <h3 class="text-base font-bold text-slate-900 mb-1">รายงานโพสต์นี้</h3>
+      <p class="text-xs text-slate-500 mb-4">เลือกเหตุผลที่พบปัญหา ทีมงานจะตรวจสอบภายใน 24-48 ชั่วโมง</p>
+      <div class="flex flex-col gap-2">
+        <button data-report-reason="spam" class="report-reason-btn">📢 Spam / โฆษณา</button>
+        <button data-report-reason="harassment" class="report-reason-btn">⚠ คุกคาม / ข่มขู่</button>
+        <button data-report-reason="inappropriate" class="report-reason-btn">🚫 เนื้อหาไม่เหมาะสม</button>
+        <button data-report-reason="impersonation" class="report-reason-btn">🎭 แอบอ้างเป็นผู้อื่น</button>
+        <button data-report-reason="other" class="report-reason-btn">💬 อื่นๆ</button>
+      </div>
+      <button onclick="bizNetwork.closeReportDialog()" class="w-full mt-4 py-2 text-sm text-slate-500 hover:text-slate-800">ยกเลิก</button>
+    </div>
+  </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>

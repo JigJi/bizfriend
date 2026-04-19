@@ -13,6 +13,7 @@
   var currentProvince = '';
   var currentFilterMode = 'all'; // 'all' | 'favorites'
   var myFavorites = new Set(); // Set of user_id ที่ถูกใจ
+  var myReportedPosts = new Set(); // Set of post_id ที่ report แล้ว → ปุ่มเป็น disabled
 
   var PROVINCES = window.BIZ_PROVINCES;
 
@@ -22,17 +23,23 @@
     if (!session) return;
     currentUser = session.user;
 
-    // Profile + Favorites in parallel
+    // Profile + Favorites + MyReports in parallel
     var results = await Promise.all([
       window.bizGetProfile(currentUser.id),
       supabaseClient
         .from('favorites')
         .select('favorited_user_id')
-        .eq('user_id', currentUser.id)
+        .eq('user_id', currentUser.id),
+      supabaseClient
+        .from('reports')
+        .select('post_id')
+        .eq('reporter_id', currentUser.id)
+        .not('post_id', 'is', null)
     ]);
 
     var profile = results[0];
     var favResult = results[1];
+    var reportResult = results[2];
 
     if (profile) {
       currentProfile = profile;
@@ -40,6 +47,7 @@
     }
 
     myFavorites = new Set((favResult.data || []).map(function (r) { return r.favorited_user_id; }));
+    myReportedPosts = new Set((reportResult.data || []).map(function (r) { return r.post_id; }));
 
     initProvinceFilter();
     loadPosts();
@@ -266,12 +274,19 @@
     var favBadge = (!isOwn && isFav)
       ? '<span class="material-symbols-rounded absolute -top-1 -right-1 z-10 pointer-events-none" style="font-variation-settings: \'FILL\' 1;color:#ef4444;font-size:1.5rem" title="ในรายการถูกใจ">favorite</span>'
       : '';
+    var reported = myReportedPosts.has(post.id);
+    var reportBtn = reported
+      ? '<button disabled class="text-[0.7rem] text-slate-400 font-medium opacity-60 cursor-not-allowed">✓ แจ้งแล้ว</button>'
+      : '<button data-report-post="' + post.id + '" data-report-user="' + post.user_id + '" class="text-[0.7rem] text-rose-400 hover:text-rose-600 font-medium">รายงาน</button>';
     var actionHtml = isOwn
       ? '<div class="flex items-center gap-1 flex-shrink-0 self-center">' +
           '<button onclick="bizNetwork.editPost(\'' + post.id + '\')" class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center" title="แก้ไขโพสต์"><span class="material-symbols-rounded text-slate-400 hover:text-primary text-lg">edit</span></button>' +
           '<button onclick="bizNetwork.deletePost(\'' + post.id + '\')" class="w-8 h-8 rounded-full hover:bg-red-50 flex items-center justify-center" title="ลบโพสต์"><span class="material-symbols-rounded text-slate-400 hover:text-red-500 text-lg">delete</span></button>' +
         '</div>'
-      : '<a href="chat.html?with=' + encodeURIComponent(post.user_id) + '" class="btn-primary !py-2 !px-4 !text-xs flex-shrink-0 self-center"><span class="material-symbols-rounded text-base">chat</span> แชท</a>';
+      : '<div class="flex flex-col items-center gap-1 flex-shrink-0 self-center">' +
+          '<a href="chat.html?with=' + encodeURIComponent(post.user_id) + '" class="btn-primary !py-2 !px-4 !text-xs"><span class="material-symbols-rounded text-base">chat</span> แชท</a>' +
+          reportBtn +
+        '</div>';
 
     var profileHref = 'profile.html?user=' + encodeURIComponent(post.user_id);
 
@@ -654,6 +669,67 @@
     }, 2500);
   }
 
+  // ===== Report dialog =====
+  var pendingReport = null; // { post_id, user_id }
+
+  function openReportDialog(postId, userId) {
+    if (myReportedPosts.has(postId)) return;
+    pendingReport = { post_id: postId, user_id: userId };
+    document.getElementById('report-dialog').classList.remove('hidden');
+  }
+
+  function closeReportDialog(e) {
+    // เช็คว่าคลิกที่ backdrop (เฉพาะ event.target = dialog div ตัวเอง)
+    if (e && e.target && e.target.id !== 'report-dialog') return;
+    document.getElementById('report-dialog').classList.add('hidden');
+    pendingReport = null;
+  }
+
+  async function submitReport(reason) {
+    if (!pendingReport) return;
+    var pid = pendingReport.post_id;
+    var uid = pendingReport.user_id;
+    closeReportDialog();
+    myReportedPosts.add(pid); // optimistic — ปุ่มเป็น disabled ทันที
+
+    // Update UI ทุก card ที่มี post_id นี้ (ไม่ต้อง reload list ทั้งหมด)
+    document.querySelectorAll('[data-report-post="' + pid + '"]').forEach(function (btn) {
+      var disabled = document.createElement('button');
+      disabled.disabled = true;
+      disabled.className = 'text-[0.7rem] text-slate-400 font-medium opacity-60 cursor-not-allowed';
+      disabled.textContent = '✓ แจ้งแล้ว';
+      btn.replaceWith(disabled);
+    });
+
+    var { error } = await supabaseClient.rpc('report_user', {
+      target_user_id: uid,
+      post_id_param: pid,
+      reason_param: reason,
+      details_param: null
+    });
+
+    if (error) {
+      myReportedPosts.delete(pid);
+      alert('รายงานไม่สำเร็จ: ' + window.bizErr(error));
+      loadPosts();
+      return;
+    }
+    showToast('ขอบคุณที่แจ้ง เราจะตรวจสอบโดยเร็ว');
+  }
+
+  // Click delegation: report button on post card + reason pick in dialog
+  document.addEventListener('click', function (e) {
+    var reportBtn = e.target.closest('[data-report-post]');
+    if (reportBtn) {
+      openReportDialog(reportBtn.dataset.reportPost, reportBtn.dataset.reportUser);
+      return;
+    }
+    var reasonBtn = e.target.closest('[data-report-reason]');
+    if (reasonBtn) {
+      submitReport(reasonBtn.dataset.reportReason);
+    }
+  });
+
   // ===== Expose =====
   window.bizNetwork = {
     createPost: createPost,
@@ -667,7 +743,8 @@
     filterProvince: filterProvince,
     goPage: goPage,
     toggleProvinceMenu: toggleProvinceMenu,
-    togglePostProvinceMenu: togglePostProvinceMenu
+    togglePostProvinceMenu: togglePostProvinceMenu,
+    closeReportDialog: closeReportDialog
   };
 
   // ===== Auto Init =====

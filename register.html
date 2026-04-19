@@ -27,6 +27,14 @@
       }
     }
   </script>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CVBGFDMX64"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-CVBGFDMX64');
+  </script>
 </head>
 <body class="font-sans bg-surface text-slate-800 antialiased min-h-screen flex items-center justify-center p-4">
 
@@ -209,6 +217,8 @@
         bodyEl.classList.add('hidden');
         successEl.classList.remove('hidden');
         startResendCooldown(60);
+        // GA4 conversion: email signup success (Google Ads จะใช้ optimize acquisition funnel)
+        if (typeof gtag === 'function') gtag('event', 'sign_up', { method: 'email' });
       }
     });
   </script>

@@ -6,12 +6,17 @@
   'use strict';
 
   // Pages ที่ไม่ต้อง login — รองรับทั้ง .html และ clean URL (Cloudflare Pages auto-strip .html)
-  var publicPages = ['login.html', 'register.html', 'login', 'register'];
+  var publicPages = ['login.html', 'register.html', 'forgot-password.html', 'reset-password.html',
+                     'login', 'register', 'forgot-password', 'reset-password'];
+  // Recovery page: มี session จาก recovery token แต่ user ต้องเข้ามาตั้งรหัสผ่าน
+  // ก่อน ห้าม redirect ไป network แม้มี session (bypass rule "public + session = network")
+  var recoveryPages = ['reset-password.html', 'reset-password'];
 
   // ===== Auth State Check =====
   async function checkAuth() {
     var currentPage = window.location.pathname.split('/').pop() || 'network.html';
     var isPublicPage = publicPages.indexOf(currentPage) !== -1;
+    var isRecoveryPage = recoveryPages.indexOf(currentPage) !== -1;
 
     var session = await window.bizGetSession();
 
@@ -28,7 +33,7 @@
       return null;
     }
 
-    if (session && isPublicPage) {
+    if (session && isPublicPage && !isRecoveryPage) {
       window.location.href = 'network.html';
       return null;
     }
@@ -113,6 +118,14 @@
       await supabaseClient.auth.signOut();
     }
 
+    // Detect "email already registered + confirmed" case — Supabase default
+    // enumeration protection returns fake-success, identities=[] is the tell.
+    // UX preference: เลือก explicit error ดีกว่าปิดเงียบ
+    if (data && data.user && !data.session &&
+        Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      return { alreadyRegistered: true };
+    }
+
     return { data: data };
   }
 
@@ -130,6 +143,32 @@
       return { error: window.bizErr(error), needsConfirm: needsConfirm };
     }
     return { data: data };
+  }
+
+  // ===== Send password recovery email =====
+  async function sendPasswordRecovery(email) {
+    var { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/reset-password.html'
+    });
+    if (error) return { error: window.bizErr(error) };
+    return { data: true };
+  }
+
+  // ===== Update password (ใช้ใน reset-password.html หลัง user คลิก recovery link) =====
+  async function updatePassword(newPassword) {
+    var { error } = await supabaseClient.auth.updateUser({ password: newPassword });
+    if (error) return { error: window.bizErr(error) };
+    return { data: true };
+  }
+
+  // ===== Change email (ใช้ใน settings; Supabase จะส่งเมลยืนยันทั้งคู่) =====
+  async function changeEmail(newEmail) {
+    var { error } = await supabaseClient.auth.updateUser(
+      { email: newEmail },
+      { emailRedirectTo: window.location.origin + '/network.html' }
+    );
+    if (error) return { error: window.bizErr(error) };
+    return { data: true };
   }
 
   // ===== Resend email confirmation =====
@@ -184,7 +223,10 @@
     login: login,
     loginWithGoogle: loginWithGoogle,
     logout: logout,
-    resendConfirmation: resendConfirmation
+    resendConfirmation: resendConfirmation,
+    sendPasswordRecovery: sendPasswordRecovery,
+    updatePassword: updatePassword,
+    changeEmail: changeEmail
   };
 
   // ===== Auto-check on page load =====

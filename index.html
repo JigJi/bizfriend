@@ -393,6 +393,22 @@
     </div>
   </footer>
 
+  <!-- ===== Auth callback guard: ถ้ามาจาก email link (confirmation/recovery/magic link) → เด้งไป network ทันที =====
+       ต้องรันก่อน supabase.js โหลด เพราะ Supabase client จะ consume hash params แล้ว history.replaceState ล้างทิ้งตอน init -->
+  <script>
+    (function () {
+      var hash = window.location.hash || '';
+      // Recovery → reset-password.html (ไม่ใช่ network.html เพราะ user ต้องตั้งรหัสก่อน)
+      if (/type=recovery/.test(hash)) {
+        window.location.replace('/reset-password.html' + hash);
+      } else if (/access_token=|type=signup|type=magiclink|type=invite/.test(hash)) {
+        window.location.replace('/network.html' + hash);
+      } else if (/error=|error_code=/.test(hash)) {
+        window.location.replace('/login.html' + hash);
+      }
+    })();
+  </script>
+
   <!-- ===== Async session check: ถ้า login อยู่ → swap nav buttons (ไม่ redirect รบกวน landing) ===== -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>

@@ -18,6 +18,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Expires', '0')
         super().end_headers()
 
+    # Skip reverse DNS — Python's default is getfqdn() which hangs ~2s per req on Windows
+    def address_string(self):
+        return self.client_address[0]
+
     def do_GET(self):
         # Clean URL rewrite: if the path has no extension and {path}.html exists, serve that.
         # E.g. /login -> login.html, /privacy -> privacy.html
@@ -31,8 +35,10 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
 
-class ReusableTCPServer(socketserver.TCPServer):
+# ThreadingTCPServer: handle requests concurrently (browser โหลด ~15 resources พร้อมกัน)
+class ReusableTCPServer(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
+    daemon_threads = True
 
 
 if __name__ == '__main__':

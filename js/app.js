@@ -94,7 +94,68 @@ window.bizWatchUnreadBadge = async function () {
 supabaseClient.auth.onAuthStateChange(function (event, session) {
   if (session && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
     window.bizWatchUnreadBadge();
+    window.bizSetupPresence();
   }
+});
+
+// ============================================
+// Online Presence (Supabase Realtime Presence)
+// ============================================
+// ephemeral — user online = มี tab เปิดอยู่, offline = tab ปิด / session หลุด
+// ไม่ต้องแก้ schema. Subscribers ได้ list users online ครบทุก sync event.
+// UI อื่นฟัง 'biz:presence-changed' แล้ว re-render dot ตามต้องการ
+var _bizOnlineUsers = new Set();
+var _bizPresenceChannel = null;
+
+window.bizIsOnline = function (userId) {
+  return _bizOnlineUsers.has(userId);
+};
+
+// Sync "online" dot บน element ที่ติด data-presence-user="<user_id>"
+//   (optional: data-presence-size="w-3 h-3" ปรับขนาด, default w-2.5 h-2.5)
+// Element นี้ต้องมี position:relative เพื่อให้ dot absolute-position ถูก
+window.bizSyncPresenceDots = function () {
+  document.querySelectorAll('[data-presence-user]').forEach(function (el) {
+    var userId = el.getAttribute('data-presence-user');
+    var size = el.getAttribute('data-presence-size') || 'w-2.5 h-2.5';
+    var existing = el.querySelector('[data-presence-dot]');
+    var online = _bizOnlineUsers.has(userId);
+    if (online && !existing) {
+      el.insertAdjacentHTML('beforeend',
+        '<span data-presence-dot class="absolute bottom-0 right-0 ' + size +
+        ' bg-green-500 border-2 border-white rounded-full pointer-events-none" title="ออนไลน์"></span>');
+    } else if (!online && existing) {
+      existing.remove();
+    }
+  });
+};
+
+// Auto-sync เมื่อ presence เปลี่ยน + หลัง DOM updates ทั่วไป
+document.addEventListener('biz:presence-changed', window.bizSyncPresenceDots);
+
+window.bizSetupPresence = async function () {
+  if (_bizPresenceChannel) return;
+  var session = await window.bizGetSession();
+  if (!session) return;
+  var myId = session.user.id;
+
+  _bizPresenceChannel = supabaseClient
+    .channel('online-users', { config: { presence: { key: myId } } })
+    .on('presence', { event: 'sync' }, function () {
+      var state = _bizPresenceChannel.presenceState();
+      _bizOnlineUsers = new Set(Object.keys(state));
+      document.dispatchEvent(new CustomEvent('biz:presence-changed'));
+    })
+    .subscribe(async function (status) {
+      if (status === 'SUBSCRIBED') {
+        await _bizPresenceChannel.track({ online_at: new Date().toISOString() });
+      }
+    });
+};
+
+// เริ่ม presence ทันทีที่หน้าโหลด (ถ้ามี session)
+document.addEventListener('DOMContentLoaded', function () {
+  window.bizSetupPresence();
 });
 
 // 77 จังหวัดของไทย (shared — ใช้ใน network + profile)

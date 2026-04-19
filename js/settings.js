@@ -15,6 +15,79 @@
     currentUser = data.user;
     renderPasswordSection();
     loadBlockedUsers();
+    wireEmailChange();
+  }
+
+  function wireEmailChange() {
+    // OAuth users: hide เพราะ email ถูก manage โดย provider (Google)
+    var identities = currentUser.identities || [];
+    var providersList = (currentUser.app_metadata && currentUser.app_metadata.providers) || [];
+    var hasOAuth = identities.some(function (i) { return i.provider !== 'email'; })
+      || providersList.some(function (p) { return p !== 'email'; });
+
+    var section = document.getElementById('email-change-section');
+    if (!section) return;
+    if (hasOAuth) return; // leave hidden
+
+    section.classList.remove('hidden');
+    var toggle = document.getElementById('email-change-toggle');
+    var form = document.getElementById('email-change-form');
+    if (toggle && form) {
+      toggle.addEventListener('click', function () {
+        var willShow = form.classList.contains('hidden');
+        form.classList.toggle('hidden', !willShow);
+        form.classList.toggle('flex', willShow);
+        if (willShow) {
+          var input = document.getElementById('new-email');
+          if (input) input.focus();
+        }
+      });
+    }
+  }
+
+  async function changeEmail() {
+    var input = document.getElementById('new-email');
+    var statusEl = document.getElementById('email-change-status');
+    var newEmail = (input.value || '').trim();
+    statusEl.classList.add('hidden');
+
+    if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+      statusEl.textContent = 'รูปแบบอีเมลไม่ถูกต้อง';
+      statusEl.className = 'text-xs mt-1 text-red-600';
+      statusEl.classList.remove('hidden');
+      return;
+    }
+    if (newEmail === currentUser.email) {
+      statusEl.textContent = 'อีเมลใหม่ต้องไม่ซ้ำกับเดิม';
+      statusEl.className = 'text-xs mt-1 text-red-600';
+      statusEl.classList.remove('hidden');
+      return;
+    }
+
+    var result = await window.bizAuth.changeEmail(newEmail);
+    if (result.error) {
+      statusEl.textContent = result.error;
+      statusEl.className = 'text-xs mt-1 text-red-600';
+      statusEl.classList.remove('hidden');
+      return;
+    }
+
+    statusEl.innerHTML = 'ส่งลิงก์ยืนยันไปที่ <b>' + currentUser.email + '</b> และ <b>' + newEmail + '</b> แล้ว — คลิกลิงก์ทั้ง 2 อีเมลเพื่อเปลี่ยนสำเร็จ';
+    statusEl.className = 'text-xs mt-1 text-green-700';
+    statusEl.classList.remove('hidden');
+    input.value = '';
+  }
+
+  function cancelEmailChange() {
+    var form = document.getElementById('email-change-form');
+    var input = document.getElementById('new-email');
+    var statusEl = document.getElementById('email-change-status');
+    if (form) {
+      form.classList.add('hidden');
+      form.classList.remove('flex');
+    }
+    if (input) input.value = '';
+    if (statusEl) statusEl.classList.add('hidden');
   }
 
   async function renderPasswordSection() {
@@ -184,6 +257,8 @@
   window.bizSettings = {
     changePassword: changePassword,
     setPassword: setPassword,
+    changeEmail: changeEmail,
+    cancelEmailChange: cancelEmailChange,
     deleteAccount: deleteAccount,
     unblock: unblock,
   };

@@ -80,6 +80,27 @@
           </div>
           <div id="settings-provider-badge" class="hidden text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 font-medium"></div>
         </div>
+
+        <!-- Change email (hidden สำหรับ OAuth users) -->
+        <div id="email-change-section" class="hidden mt-4 pt-4 border-t border-slate-100">
+          <button id="email-change-toggle" type="button" class="text-sm text-primary font-medium hover:underline">
+            เปลี่ยนอีเมล
+          </button>
+          <div id="email-change-form" class="hidden mt-3 flex-col gap-2 max-w-sm">
+            <input id="new-email" type="email" placeholder="อีเมลใหม่" class="bg-slate-50 rounded-xl px-4 py-2.5 text-sm border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none">
+            <p class="text-xs text-slate-500">เราจะส่งลิงก์ยืนยันไปทั้งอีเมลเก่าและใหม่ — ต้องคลิกทั้งคู่เพื่อเปลี่ยนสำเร็จ</p>
+            <div class="flex gap-2 mt-1">
+              <button onclick="bizSettings.changeEmail()" class="btn-primary w-fit">
+                <span class="material-symbols-rounded text-lg">send</span>
+                ส่งลิงก์ยืนยัน
+              </button>
+              <button onclick="bizSettings.cancelEmailChange()" type="button" class="px-4 py-2 text-sm text-slate-600 hover:text-slate-800">
+                ยกเลิก
+              </button>
+            </div>
+            <p id="email-change-status" class="hidden text-xs mt-1"></p>
+          </div>
+        </div>
       </section>
 
       <!-- ==================== Password ==================== -->

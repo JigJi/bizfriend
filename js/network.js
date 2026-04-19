@@ -210,6 +210,7 @@
       html += renderPost(post);
     });
     container.innerHTML = html;
+    if (window.bizSyncPresenceDots) window.bizSyncPresenceDots();
 
     // Post count
     var countEl = document.getElementById('post-total');
@@ -275,7 +276,7 @@
     var profileHref = 'profile.html?user=' + encodeURIComponent(post.user_id);
 
     return '<div class="bg-white border border-slate-200/60 rounded-2xl p-4 flex gap-4 items-center" data-post-id="' + post.id + '">' +
-      '<div class="relative flex-shrink-0">' +
+      '<div class="relative flex-shrink-0" data-presence-user="' + post.user_id + '" data-presence-size="w-3 h-3">' +
         '<a href="' + profileHref + '" class="block hover:opacity-75 transition-opacity">' +
           '<div class="w-20 h-20 rounded-xl flex items-center justify-center font-bold text-2xl overflow-hidden" style="' + avatarWrapStyle + '">' + avatarHtml + '</div>' +
         '</a>' +

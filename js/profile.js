@@ -109,6 +109,14 @@
       }
     }
 
+    // Presence dot (เฉพาะเวลาดูโปรไฟล์คนอื่น ไม่โชว์บนของตัวเอง)
+    var bigAvatarWrap = document.querySelector('.profile-avatar-lg');
+    if (bigAvatarWrap && viewedUserId !== currentUser.id) {
+      bigAvatarWrap.setAttribute('data-presence-user', viewedUserId);
+      bigAvatarWrap.setAttribute('data-presence-size', 'w-4 h-4');
+      if (window.bizSyncPresenceDots) window.bizSyncPresenceDots();
+    }
+
     // Cover
     if (p.cover_url) {
       var coverEl = document.getElementById('profile-cover');
@@ -333,16 +341,17 @@
       var initial = name.charAt(0) || '?';
       var href = 'profile.html?user=' + encodeURIComponent(row.favorited_user_id);
       var s = window.bizAvatarStyle(row.favorited_user_id);
-      var avatarHtml = p.avatar_url
+      var avatarBase = p.avatar_url
         ? '<img src="' + p.avatar_url + '" class="w-12 h-12 rounded-full object-cover">'
         : '<div class="w-12 h-12 rounded-full flex items-center justify-center font-semibold" style="background:' + s.bg + ';color:' + s.fg + '">' + initial + '</div>';
       return (
         '<a href="' + href + '" class="flex items-center gap-3 bg-slate-50 hover:bg-slate-100 rounded-full pr-4 pl-1 py-1 transition-colors" style="color:inherit;text-decoration:none;">' +
-          avatarHtml +
+          '<span class="relative inline-block" data-presence-user="' + row.favorited_user_id + '">' + avatarBase + '</span>' +
           '<span class="text-sm font-medium text-slate-700">' + name + '</span>' +
         '</a>'
       );
     }).join('');
+    if (window.bizSyncPresenceDots) window.bizSyncPresenceDots();
   }
 
   function updateProfileFavButton(isFav) {

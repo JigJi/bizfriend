@@ -23,6 +23,11 @@ if (IS_LOCAL) {
   _bizDevBadge.textContent = 'LOCAL DEV';
   _bizDevBadge.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:9999;background:#f97316;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:0.5px;box-shadow:0 2px 6px rgba(0,0,0,0.15);font-family:system-ui,-apple-system,sans-serif;pointer-events:none;';
   (document.body || document.documentElement).appendChild(_bizDevBadge);
+
+  // ซ่อน OAuth buttons บน dev — local Supabase ไม่ได้ config Google provider
+  document.querySelectorAll('[data-oauth-section]').forEach(function (el) {
+    el.style.display = 'none';
+  });
 }
 
 // แปล error จาก Supabase เป็นภาษาไทย (fallback เป็นข้อความเดิมถ้าไม่รู้จัก)

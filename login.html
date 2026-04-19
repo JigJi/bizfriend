@@ -43,6 +43,18 @@
       <!-- Error Message -->
       <div id="login-error" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600"></div>
 
+      <!-- Email not confirmed — resend prompt -->
+      <div id="login-resend-box" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+        <p class="text-sm text-amber-800 mb-2">
+          <span class="material-symbols-rounded align-middle text-base mr-1">mail</span>
+          บัญชีนี้ยังไม่ได้ยืนยันอีเมล
+        </p>
+        <button id="login-resend-btn" type="button" class="w-full py-2 rounded-full border border-amber-300 bg-white hover:bg-amber-50 text-sm font-medium text-amber-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          ส่งอีเมลยืนยันอีกครั้ง
+        </button>
+        <p id="login-resend-status" class="hidden text-center text-xs mt-2"></p>
+      </div>
+
       <form id="login-form" class="flex flex-col gap-4">
         <div>
           <label class="text-sm font-medium text-slate-700 mb-1.5 block">อีเมล</label>
@@ -81,23 +93,73 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
+  <script src="js/password-toggle.js"></script>
   <script src="js/auth.js"></script>
   <script>
+    var lastAttemptedEmail = '';
+
+    function startLoginResendCooldown(seconds) {
+      var btn = document.getElementById('login-resend-btn');
+      var remaining = seconds;
+      btn.disabled = true;
+      btn.textContent = 'ส่งอีกครั้งใน ' + remaining + ' วินาที';
+      var timer = setInterval(function () {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(timer);
+          btn.disabled = false;
+          btn.textContent = 'ส่งอีเมลยืนยันอีกครั้ง';
+        } else {
+          btn.textContent = 'ส่งอีกครั้งใน ' + remaining + ' วินาที';
+        }
+      }, 1000);
+    }
+
+    document.getElementById('login-resend-btn').addEventListener('click', async function () {
+      if (!lastAttemptedEmail) return;
+      var statusEl = document.getElementById('login-resend-status');
+      statusEl.classList.add('hidden');
+
+      var result = await bizAuth.resendConfirmation(lastAttemptedEmail);
+      if (result.error) {
+        statusEl.textContent = result.error;
+        statusEl.className = 'text-center text-xs mt-2 text-red-600';
+      } else {
+        statusEl.textContent = 'ส่งอีเมลใหม่แล้ว กรุณาตรวจสอบกล่องจดหมาย';
+        statusEl.className = 'text-center text-xs mt-2 text-green-700';
+      }
+      statusEl.classList.remove('hidden');
+      startLoginResendCooldown(60);
+    });
+
+    // ===== แสดงเหตุผลถ้าถูกเด้งมาจาก checkAuth (session ที่ยังไม่ยืนยันอีเมล) =====
+    if (new URLSearchParams(location.search).get('unconfirmed') === '1') {
+      var errEl = document.getElementById('login-error');
+      errEl.textContent = 'บัญชีนี้ยังไม่ได้ยืนยันอีเมล กรุณาเช็คกล่องจดหมายแล้วคลิกลิงก์ยืนยันก่อนเข้าสู่ระบบ';
+      errEl.classList.remove('hidden');
+    }
+
     document.getElementById('login-form').addEventListener('submit', async function (e) {
       e.preventDefault();
       var btn = document.getElementById('login-btn');
       var errorEl = document.getElementById('login-error');
+      var resendBox = document.getElementById('login-resend-box');
       errorEl.classList.add('hidden');
+      resendBox.classList.add('hidden');
       btn.textContent = 'กำลังเข้าสู่ระบบ...';
       btn.disabled = true;
 
       var email = document.getElementById('login-email').value;
       var password = document.getElementById('login-password').value;
+      lastAttemptedEmail = email;
       var result = await bizAuth.login(email, password);
 
       if (result.error) {
         errorEl.textContent = result.error;
         errorEl.classList.remove('hidden');
+        if (result.needsConfirm) {
+          resendBox.classList.remove('hidden');
+        }
         btn.textContent = 'เข้าสู่ระบบ';
         btn.disabled = false;
       } else {

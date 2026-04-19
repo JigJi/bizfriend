@@ -16,6 +16,15 @@ const SUPABASE_ANON_KEY = IS_LOCAL
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 console.log('[FriendTa] env:', IS_LOCAL ? 'LOCAL (test)' : 'PRODUCTION', '→', SUPABASE_URL);
 
+// Visual marker บน dev — ไม่ให้สับสนกับ prod (คนละ DB, คนละ SMTP)
+if (IS_LOCAL) {
+  document.title = '[DEV] ' + document.title;
+  var _bizDevBadge = document.createElement('div');
+  _bizDevBadge.textContent = 'LOCAL DEV';
+  _bizDevBadge.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:9999;background:#f97316;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;border-radius:999px;letter-spacing:0.5px;box-shadow:0 2px 6px rgba(0,0,0,0.15);font-family:system-ui,-apple-system,sans-serif;pointer-events:none;';
+  (document.body || document.documentElement).appendChild(_bizDevBadge);
+}
+
 // แปล error จาก Supabase เป็นภาษาไทย (fallback เป็นข้อความเดิมถ้าไม่รู้จัก)
 var BIZ_ERR_MAP = {
   'invalid_credentials': 'อีเมลหรือรหัสผ่านไม่ถูกต้อง',

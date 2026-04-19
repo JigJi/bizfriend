@@ -43,9 +43,36 @@
       <!-- Error Message -->
       <div id="register-error" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600"></div>
 
-      <!-- Success Message -->
-      <div id="register-success" class="hidden mb-4 p-3 bg-green-50 border border-green-200 rounded-xl text-sm text-green-700"></div>
+      <!-- Success State (ซ่อน form + แสดงข้อความยืนยัน) -->
+      <div id="register-success" class="hidden">
+        <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-xl">
+          <div class="flex items-start gap-2 mb-2">
+            <span class="material-symbols-rounded text-green-600 text-xl">mark_email_read</span>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-green-800">ส่งอีเมลยืนยันแล้ว</p>
+              <p class="text-xs text-green-700 mt-1">
+                เราส่งลิงก์ยืนยันไปที่<br>
+                <span id="success-email" class="font-medium"></span>
+              </p>
+            </div>
+          </div>
+          <p class="text-xs text-green-700/80 mt-3 pl-7">
+            กรุณาเปิดอีเมลแล้วคลิกลิงก์เพื่อเปิดใช้งานบัญชี<br>
+            หากไม่พบ ลองเช็คโฟลเดอร์ spam/junk
+          </p>
+        </div>
 
+        <button id="resend-btn" type="button" class="w-full py-2.5 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          ส่งอีเมลอีกครั้ง
+        </button>
+        <p id="resend-status" class="hidden text-center text-xs mt-2"></p>
+
+        <a href="login.html" class="block text-center text-sm text-primary font-medium hover:underline mt-4">
+          กลับไปหน้าเข้าสู่ระบบ
+        </a>
+      </div>
+
+      <div id="register-body">
       <form id="register-form" class="flex flex-col gap-4">
         <div>
           <label class="text-sm font-medium text-slate-700 mb-1.5 block">ชื่อที่แสดง</label>
@@ -89,20 +116,61 @@
         มีบัญชีแล้ว?
         <a href="login.html" class="text-primary font-medium hover:underline">เข้าสู่ระบบ</a>
       </div>
+      </div><!-- /register-body -->
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js"></script>
+  <script src="js/password-toggle.js"></script>
   <script src="js/auth.js"></script>
   <script>
+    var registeredEmail = '';
+
+    // ===== Resend cooldown =====
+    function startResendCooldown(seconds) {
+      var btn = document.getElementById('resend-btn');
+      var remaining = seconds;
+      btn.disabled = true;
+      btn.textContent = 'ส่งอีกครั้งใน ' + remaining + ' วินาที';
+      var timer = setInterval(function () {
+        remaining--;
+        if (remaining <= 0) {
+          clearInterval(timer);
+          btn.disabled = false;
+          btn.textContent = 'ส่งอีเมลอีกครั้ง';
+        } else {
+          btn.textContent = 'ส่งอีกครั้งใน ' + remaining + ' วินาที';
+        }
+      }, 1000);
+    }
+
+    // ===== Resend button handler =====
+    document.getElementById('resend-btn').addEventListener('click', async function () {
+      if (!registeredEmail) return;
+      var statusEl = document.getElementById('resend-status');
+      statusEl.classList.add('hidden');
+
+      var result = await bizAuth.resendConfirmation(registeredEmail);
+      if (result.error) {
+        statusEl.textContent = result.error;
+        statusEl.className = 'text-center text-xs mt-2 text-red-600';
+      } else {
+        statusEl.textContent = 'ส่งอีเมลใหม่แล้ว กรุณาตรวจสอบกล่องจดหมาย';
+        statusEl.className = 'text-center text-xs mt-2 text-green-700';
+      }
+      statusEl.classList.remove('hidden');
+      startResendCooldown(60);
+    });
+
+    // ===== Register form submit =====
     document.getElementById('register-form').addEventListener('submit', async function (e) {
       e.preventDefault();
       var btn = document.getElementById('register-btn');
       var errorEl = document.getElementById('register-error');
       var successEl = document.getElementById('register-success');
+      var bodyEl = document.getElementById('register-body');
       errorEl.classList.add('hidden');
-      successEl.classList.add('hidden');
 
       var name = document.getElementById('reg-name').value.trim();
       var email = document.getElementById('reg-email').value;
@@ -126,11 +194,11 @@
         btn.textContent = 'สมัครสมาชิก';
         btn.disabled = false;
       } else {
-        successEl.textContent = 'สมัครสำเร็จ! กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชี';
+        registeredEmail = email;
+        document.getElementById('success-email').textContent = email;
+        bodyEl.classList.add('hidden');
         successEl.classList.remove('hidden');
-        document.getElementById('register-form').reset();
-        btn.textContent = 'สมัครสมาชิก';
-        btn.disabled = false;
+        startResendCooldown(60);
       }
     });
   </script>

@@ -15,6 +15,14 @@
 
     var session = await window.bizGetSession();
 
+    // Defense in depth: ถ้า Supabase setting หลุด/ถูกเปลี่ยน อย่าให้ session
+    // ที่ยังไม่ยืนยันอีเมลเข้าระบบได้ (OAuth จะ set email_confirmed_at อัตโนมัติ)
+    if (session && !session.user.email_confirmed_at) {
+      await supabaseClient.auth.signOut();
+      window.location.href = 'login.html?unconfirmed=1';
+      return null;
+    }
+
     if (!session && !isPublicPage) {
       window.location.href = 'login.html';
       return null;
@@ -92,11 +100,19 @@
       email: email,
       password: password,
       options: {
-        data: { display_name: displayName }
+        data: { display_name: displayName },
+        emailRedirectTo: window.location.origin + '/network.html'
       }
     });
 
     if (error) return { error: window.bizErr(error) };
+
+    // กัน Supabase setting หลุด: ถ้า signUp คืน session มาทั้งที่ยังไม่ยืนยันอีเมล
+    // ให้ sign out ทันที — ไม่ให้สถานะ "logged in โดยไม่ confirm" เกิดขึ้นได้
+    if (data && data.session && data.user && !data.user.email_confirmed_at) {
+      await supabaseClient.auth.signOut();
+    }
+
     return { data: data };
   }
 
@@ -107,8 +123,23 @@
       password: password
     });
 
-    if (error) return { error: window.bizErr(error) };
+    if (error) {
+      var code = (error.code || error.error_code || '').toLowerCase();
+      var msg = (error.message || '').toLowerCase();
+      var needsConfirm = code === 'email_not_confirmed' || msg.indexOf('email not confirmed') !== -1;
+      return { error: window.bizErr(error), needsConfirm: needsConfirm };
+    }
     return { data: data };
+  }
+
+  // ===== Resend email confirmation =====
+  async function resendConfirmation(email) {
+    var { error } = await supabaseClient.auth.resend({
+      type: 'signup',
+      email: email
+    });
+    if (error) return { error: window.bizErr(error) };
+    return { data: true };
   }
 
   // ===== Login with Google =====
@@ -152,7 +183,8 @@
     register: register,
     login: login,
     loginWithGoogle: loginWithGoogle,
-    logout: logout
+    logout: logout,
+    resendConfirmation: resendConfirmation
   };
 
   // ===== Auto-check on page load =====

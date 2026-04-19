@@ -145,12 +145,14 @@
         ? '<span class="ml-2 inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-red-500 text-white text-[0.65rem] font-bold leading-none flex-shrink-0">' + (c.unread > 99 ? '99+' : c.unread) + '</span>'
         : '';
       var previewClasses = hasUnread ? 'text-xs text-slate-800 font-semibold truncate flex-1' : 'text-xs text-slate-500 truncate flex-1';
+      // ไม่ใส่ <a href=profile> ในสี่เหลี่ยมแชท — whole row คลิก = เปิดแชท
+      // (profile ดูได้จาก header ของแชทที่เปิดแล้ว หรือหน้า network)
       return (
         '<div class="chat-list-item ' + (isActive ? 'active' : '') + '" data-conv-id="' + escapeHtml(c.id) + '">' +
-          '<a href="' + profileHref + '" data-profile-link title="ดูโปรไฟล์" style="display:contents;">' + avatarInner + '</a>' +
+          avatarInner +
           '<div class="flex-1 min-w-0">' +
             '<div class="flex items-center justify-between gap-2">' +
-              '<a href="' + profileHref + '" data-profile-link class="text-sm font-semibold text-slate-800 truncate hover:underline" style="color:inherit;text-decoration:none;">' + escapeHtml(name) + '</a>' +
+              '<span class="text-sm font-semibold text-slate-800 truncate">' + escapeHtml(name) + '</span>' +
               '<span class="text-xs text-slate-400 flex-shrink-0">' + escapeHtml(time) + '</span>' +
             '</div>' +
             '<div class="flex items-center justify-between gap-2 mt-0.5">' +
@@ -163,9 +165,7 @@
     }).join('');
 
     container.querySelectorAll('[data-conv-id]').forEach(function (el) {
-      el.addEventListener('click', function (e) {
-        // ถ้าคลิกที่ avatar/ชื่อ → ปล่อย browser navigate ไปหน้าโปรไฟล์ (default behavior)
-        if (e.target.closest('[data-profile-link]')) return;
+      el.addEventListener('click', function () {
         openConversation(el.dataset.convId);
       });
     });
@@ -173,6 +173,8 @@
 
   // ===== Open conversation =====
   async function openConversation(convId) {
+    // Clear armed state จากแชทเดิมก่อน (กันปุ่ม "ยกเลิกข้อความ" ค้างข้าม conv)
+    clearArmed();
     currentConvId = convId;
 
     // mark active in list
@@ -311,10 +313,30 @@
 
   async function deleteMessage(messageId) {
     if (!messageId) return;
+
+    // ดึง type + content ก่อน RPC wipe — ถ้าเป็น image จะได้ลบไฟล์จาก storage ตาม
+    var { data: msg } = await supabaseClient
+      .from('messages')
+      .select('type, content')
+      .eq('id', messageId)
+      .maybeSingle();
+
     var { error } = await supabaseClient.rpc('delete_my_message', { message_id: messageId });
     if (error) {
       console.error('delete failed', error);
       alert('ลบไม่สำเร็จ: ' + window.bizErr(error));
+      return;
+    }
+
+    // ถ้าเป็นรูป → ลบไฟล์จาก storage (orphan cleanup)
+    // URL format: .../storage/v1/object/public/chat-images/{path}
+    if (msg && msg.type === 'image' && msg.content) {
+      var m = msg.content.match(/\/chat-images\/(.+?)(?:\?|$)/);
+      if (m && m[1]) {
+        var storagePath = decodeURIComponent(m[1]);
+        supabaseClient.storage.from('chat-images').remove([storagePath])
+          .then(function (r) { if (r.error) console.warn('storage cleanup failed', r.error); });
+      }
     }
     // Realtime UPDATE จะ re-render bubble เป็น "ข้อความถูกลบแล้ว" + refresh list
   }
@@ -702,6 +724,7 @@
     // ?with=<user_id> → สร้าง DM + โหลด list parallel (ประหยัด 1 round trip)
     var params = new URLSearchParams(window.location.search);
     var withUserId = params.get('with');
+    var isMobile = window.innerWidth < 1024;
 
     if (withUserId) {
       var [convId] = await Promise.all([
@@ -714,10 +737,24 @@
         }
         await openConversation(convId);
         history.replaceState(null, '', 'chat.html');
+      } else {
+        // findOrCreateDM คืน null → user id ไม่ valid / RPC fail
+        // clean URL + fallback ไปหน้ารายการ (mobile) หรือ auto-open conv แรก (desktop)
+        history.replaceState(null, '', 'chat.html');
+        alert('ไม่สามารถเปิดแชทกับผู้ใช้นี้ได้ — อาจเป็นบัญชีที่ถูกลบหรือ link ไม่ถูกต้อง');
+        if (isMobile) {
+          document.querySelector('.chat-sidebar-panel').classList.add('show');
+        } else if (conversationsCache.length > 0) {
+          await openConversation(conversationsCache[0].id);
+        }
       }
     } else {
       await loadConversations();
-      if (conversationsCache.length > 0) {
+      if (isMobile) {
+        // มือถือ: โชว์ list ก่อน อย่า auto-open — UX ตรงกับ native chat apps
+        document.querySelector('.chat-sidebar-panel').classList.add('show');
+      } else if (conversationsCache.length > 0) {
+        // Desktop split-pane: auto-open conv แรกให้เห็น messages ทันที
         await openConversation(conversationsCache[0].id);
       }
     }

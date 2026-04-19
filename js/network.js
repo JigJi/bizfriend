@@ -275,24 +275,36 @@
 
     var profileHref = 'profile.html?user=' + encodeURIComponent(post.user_id);
 
-    return '<div class="bg-white border border-slate-200/60 rounded-2xl p-4 flex gap-4 items-center" data-post-id="' + post.id + '">' +
-      '<div class="relative flex-shrink-0" data-presence-user="' + post.user_id + '" data-presence-size="w-3 h-3">' +
+    // Footer inline: location + info + tags — ยัดให้อยู่บรรทัดเดียว
+    var footerParts = [];
+    if (locationHtml) footerParts.push(locationHtml);
+    if (infoHtml) footerParts.push(infoHtml);
+    if (tagHtml) footerParts.push(tagHtml);
+    var footerHtml = footerParts.length
+      ? '<div class="flex items-center gap-1.5 flex-wrap mt-1 text-xs">' + footerParts.join('') + '</div>'
+      : '';
+
+    // Edited mark inline กับ header (italic + เล็ก)
+    var headerEdited = post.updated_at
+      ? '<span class="text-[0.625rem] text-slate-300 italic flex-shrink-0">(แก้ไขแล้ว)</span>'
+      : '';
+
+    return '<div class="bg-white border border-slate-200/60 rounded-2xl p-3 flex gap-3 items-start" data-post-id="' + post.id + '">' +
+      '<div class="relative flex-shrink-0" data-presence-user="' + post.user_id + '" data-presence-size="w-2.5 h-2.5">' +
         '<a href="' + profileHref + '" class="block hover:opacity-75 transition-opacity">' +
-          '<div class="w-20 h-20 rounded-xl flex items-center justify-center font-bold text-2xl overflow-hidden" style="' + avatarWrapStyle + '">' + avatarHtml + '</div>' +
+          '<div class="w-14 h-14 rounded-xl flex items-center justify-center font-bold text-lg overflow-hidden" style="' + avatarWrapStyle + '">' + avatarHtml + '</div>' +
         '</a>' +
         favBadge +
       '</div>' +
       '<div class="flex-1 min-w-0">' +
-        '<a href="' + profileHref + '" class="flex items-center gap-2 mb-1 flex-wrap no-underline hover:opacity-75 transition-opacity" style="color:inherit;text-decoration:none;">' +
-          '<span class="text-sm font-semibold text-slate-800">' + (p.display_name || 'ไม่ระบุ') + '</span>' +
-          infoHtml +
-          locationHtml +
-          '<span class="text-xs text-slate-300">' + timeAgo + '</span>' +
-          editedMark +
+        '<a href="' + profileHref + '" class="flex items-baseline gap-1.5 no-underline hover:opacity-75 transition-opacity" style="color:inherit;text-decoration:none;">' +
+          '<span class="text-sm font-semibold text-slate-800 truncate">' + (p.display_name || 'ไม่ระบุ') + '</span>' +
+          '<span class="text-xs text-slate-400 flex-shrink-0">' + timeAgo + '</span>' +
+          headerEdited +
         '</a>' +
         '<div data-post-content>' +
-          '<p class="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">' + escapeHtml(post.content) + '</p>' +
-          (tagHtml ? '<div class="flex items-center gap-2 mt-2">' + tagHtml + '</div>' : '') +
+          '<p class="text-sm text-slate-700 whitespace-pre-wrap leading-snug line-clamp-2 mt-0.5">' + escapeHtml(post.content) + '</p>' +
+          footerHtml +
         '</div>' +
       '</div>' +
       actionHtml +
@@ -348,6 +360,15 @@
       return;
     }
 
+    // Disable ปุ่ม save/cancel + textarea ระหว่าง async → กัน double-click
+    var postEl = document.querySelector('[data-post-id="' + postId + '"]');
+    var buttons = postEl ? postEl.querySelectorAll('button') : [];
+    buttons.forEach(function (b) { b.disabled = true; });
+    ta.disabled = true;
+    var saveBtn = postEl && postEl.querySelector('button[onclick*="saveEditPost"]');
+    var origLabel = saveBtn ? saveBtn.textContent : '';
+    if (saveBtn) saveBtn.textContent = 'กำลังบันทึก...';
+
     var { error } = await supabaseClient
       .from('posts')
       .update({ content: newContent })
@@ -355,6 +376,9 @@
 
     if (error) {
       alert('บันทึกไม่สำเร็จ: ' + window.bizErr(error));
+      buttons.forEach(function (b) { b.disabled = false; });
+      ta.disabled = false;
+      if (saveBtn) saveBtn.textContent = origLabel;
       return;
     }
 

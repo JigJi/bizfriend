@@ -9,6 +9,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
   <title>FriendTa - หาเพื่อน</title>
+  <style>body{font-family:'Inter','LINE Seed Sans TH',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}</style>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,7 +60,7 @@
         <span class="logo-font text-xl"><img src="/assets/img/logo.png" alt="FriendTa" class="brand-logo"></span>
       </div>
       <div class="flex items-center gap-2">
-        <button class="blur-toggle" title="เปิด/ปิด blur รูปภาพ">
+        <button class="blur-toggle" aria-label="เปิด/ปิด blur รูปภาพ" title="เปิด/ปิด blur รูปภาพ">
           <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
           <span class="material-symbols-rounded icon-off">visibility</span>
         </button>
@@ -73,7 +74,7 @@
         <p class="text-sm text-slate-500 mt-0.5">โพสต์หาเพื่อน หาคนคุย หาคนเจอ</p>
       </div>
       <div class="hide-mobile flex items-center gap-3">
-        <button class="blur-toggle" title="เปิด/ปิด blur รูปภาพ">
+        <button class="blur-toggle" aria-label="เปิด/ปิด blur รูปภาพ" title="เปิด/ปิด blur รูปภาพ">
           <span class="material-symbols-rounded icon-on text-slate-600">visibility_off</span>
           <span class="material-symbols-rounded icon-off">visibility</span>
         </button>
@@ -110,85 +111,92 @@
           โพสต์หาเพื่อน
         </button>
 
-        <div id="create-post-form" class="hidden mt-3 bg-white border border-slate-200/60 rounded-2xl p-5">
-          <!-- 4-col grid: avatar (rowspan all) | label | content | post button (rowspan 3) -->
-          <div class="grid grid-cols-[auto_auto_1fr_auto] gap-x-4 gap-y-3 items-center">
+        <div id="create-post-form" class="hidden mt-3 bg-white border border-slate-200/60 rounded-2xl p-4 sm:p-5">
+          <div class="flex flex-col gap-3">
 
-            <!-- Avatar (spans all 4 rows: textarea + 3 form rows) -->
-            <div id="post-avatar" class="row-span-4 self-start w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-primary font-semibold text-sm flex-shrink-0 overflow-hidden">?</div>
-
-            <!-- Textarea row 1: spans label + content + button cols -->
-            <textarea id="post-text" rows="3" placeholder="เขียนอะไรสักหน่อย... เช่น หาเพื่อนกินข้าว หาคนคุย หาแฟน" class="col-span-3 w-full bg-slate-50 rounded-xl px-4 py-3 text-sm text-slate-700 border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none resize-none transition-colors"></textarea>
-
-            <!-- ข้อมูลส่วนตัว -->
-            <div class="text-xs text-slate-500 font-medium">ข้อมูลส่วนตัว</div>
-            <div class="info-bar flex items-center gap-2 flex-wrap min-w-0" id="info-bar">
-              <div class="info-bar-fields">
-                <input type="number" placeholder="อายุ" class="info-field" id="post-age" title="อายุ">
-                <span class="info-field-unit">ปี</span>
-                <span class="info-field-sep"></span>
-                <input type="number" placeholder="นน." class="info-field" id="post-weight" title="น้ำหนัก">
-                <span class="info-field-unit">กก.</span>
-                <span class="info-field-sep"></span>
-                <input type="number" placeholder="สูง" class="info-field" id="post-height" title="ส่วนสูง">
-                <span class="info-field-unit">ซม.</span>
-                <span class="info-field-sep"></span>
-                <select class="info-field info-field-select" id="post-role" title="บทบาท">
-                  <option value="">- บทบาท -</option>
-                  <option>รุก</option>
-                  <option>รับ</option>
-                  <option>โบ้ท</option>
-                  <option>ไบ</option>
-                  <option>ชายแท้</option>
-                </select>
-              </div>
-              <button type="button" class="info-bar-toggle" onclick="document.getElementById('info-bar').classList.toggle('info-bar-off')">
-                <span class="material-symbols-rounded text-sm icon-show">visibility</span>
-                <span class="material-symbols-rounded text-sm icon-hide">visibility_off</span>
-                <span class="toggle-text-show text-xs">แสดงในโพสต์</span>
-                <span class="toggle-text-hide text-xs">ไม่แสดงในโพสต์</span>
-              </button>
+            <!-- Avatar + Textarea -->
+            <div class="flex gap-3">
+              <div id="post-avatar" class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-primary font-semibold text-sm flex-shrink-0 overflow-hidden">?</div>
+              <textarea id="post-text" rows="3" placeholder="เขียนอะไรสักหน่อย... เช่น หาเพื่อนกินข้าว หาคนคุย หาแฟน" class="flex-1 min-w-0 bg-slate-50 rounded-xl px-4 py-3 text-sm text-slate-700 border border-transparent focus:border-primary/30 focus:bg-white focus:outline-none resize-none transition-colors"></textarea>
             </div>
 
-            <!-- Post button (bottom-right, spans all 3 rows) -->
-            <button class="btn-primary !py-2 !px-4 !text-xs row-span-3 self-end" onclick="bizNetwork.createPost()">
-              <span class="material-symbols-rounded text-base">send</span>
-              โพสต์
-            </button>
+            <!-- ข้อมูลส่วนตัว: label stacked on mobile, inline on sm+ -->
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+              <div class="text-xs text-slate-500 font-medium sm:w-24 sm:flex-shrink-0">ข้อมูลส่วนตัว</div>
+              <div class="info-bar flex items-center gap-2 flex-wrap min-w-0 flex-1" id="info-bar">
+                <div class="info-bar-fields">
+                  <input type="number" placeholder="อายุ" class="info-field" id="post-age" title="อายุ">
+                  <span class="info-field-unit">ปี</span>
+                  <span class="info-field-sep"></span>
+                  <input type="number" placeholder="นน." class="info-field" id="post-weight" title="น้ำหนัก">
+                  <span class="info-field-unit">กก.</span>
+                  <span class="info-field-sep"></span>
+                  <input type="number" placeholder="สูง" class="info-field" id="post-height" title="ส่วนสูง">
+                  <span class="info-field-unit">ซม.</span>
+                  <span class="info-field-sep"></span>
+                  <select class="info-field info-field-select" id="post-role" title="บทบาท">
+                    <option value="">- บทบาท -</option>
+                    <option>รุก</option>
+                    <option>รับ</option>
+                    <option>โบ้ท</option>
+                    <option>ไบ</option>
+                    <option>ชายแท้</option>
+                  </select>
+                </div>
+                <button type="button" class="info-bar-toggle whitespace-nowrap" onclick="document.getElementById('info-bar').classList.toggle('info-bar-off')">
+                  <span class="material-symbols-rounded text-sm icon-show">visibility</span>
+                  <span class="material-symbols-rounded text-sm icon-hide">visibility_off</span>
+                  <span class="toggle-text-show text-xs">แสดงในโพสต์</span>
+                  <span class="toggle-text-hide text-xs">ไม่แสดงในโพสต์</span>
+                </button>
+              </div>
+            </div>
 
             <!-- ที่อยู่ตอนนี้ -->
-            <div class="text-xs text-slate-500 font-medium">ที่อยู่ตอนนี้</div>
-            <div>
-              <div id="post-province-wrap" class="relative inline-block">
-                <input type="hidden" id="post-province" value="">
-                <button type="button" id="post-province-btn" onclick="bizNetwork.togglePostProvinceMenu(event)" class="info-bar-province !mt-0">
-                  <span id="post-province-label" class="text-slate-400">— ไม่ระบุ —</span>
-                  <span class="material-symbols-rounded text-base ml-1">expand_more</span>
-                </button>
-                <div id="post-province-menu" class="hidden absolute left-0 top-full mt-1 w-64 bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-hidden">
-                  <div class="p-2 border-b border-slate-100">
-                    <input id="post-province-search" type="search" placeholder="ค้นหาจังหวัด..." class="w-full px-3 py-1.5 bg-slate-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+              <div class="text-xs text-slate-500 font-medium sm:w-24 sm:flex-shrink-0">ที่อยู่ตอนนี้</div>
+              <div class="flex-1 min-w-0">
+                <div id="post-province-wrap" class="relative inline-block">
+                  <input type="hidden" id="post-province" value="">
+                  <button type="button" id="post-province-btn" onclick="bizNetwork.togglePostProvinceMenu(event)" class="info-bar-province !mt-0">
+                    <span id="post-province-label" class="text-slate-400">— ไม่ระบุ —</span>
+                    <span class="material-symbols-rounded text-base ml-1">expand_more</span>
+                  </button>
+                  <div id="post-province-menu" class="hidden absolute left-0 top-full mt-1 w-64 bg-white rounded-xl border border-slate-200 shadow-xl z-50 overflow-hidden">
+                    <div class="p-2 border-b border-slate-100">
+                      <input id="post-province-search" type="search" placeholder="ค้นหาจังหวัด..." class="w-full px-3 py-1.5 bg-slate-50 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/20">
+                    </div>
+                    <div id="post-province-list" class="max-h-64 overflow-y-auto py-1"></div>
                   </div>
-                  <div id="post-province-list" class="max-h-64 overflow-y-auto py-1"></div>
                 </div>
               </div>
             </div>
 
             <!-- มองหา -->
-            <div class="text-xs text-slate-500 font-medium">มองหา</div>
-            <div class="flex flex-wrap items-center gap-2">
-              <label class="cursor-pointer">
-                <input type="checkbox" name="post-tag" value="หาเพื่อน" class="hidden peer">
-                <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาเพื่อน</span>
-              </label>
-              <label class="cursor-pointer">
-                <input type="checkbox" name="post-tag" value="หาแฟน" class="hidden peer">
-                <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาแฟน</span>
-              </label>
-              <label class="cursor-pointer">
-                <input type="checkbox" name="post-tag" value="หาคนคุย" class="hidden peer">
-                <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาคนคุย</span>
-              </label>
+            <div class="flex flex-col sm:flex-row sm:items-start gap-2">
+              <div class="text-xs text-slate-500 font-medium sm:w-24 sm:flex-shrink-0 sm:pt-1.5">มองหา</div>
+              <div class="flex flex-wrap items-center gap-2 flex-1">
+                <label class="cursor-pointer">
+                  <input type="checkbox" name="post-tag" value="หาเพื่อน" class="hidden peer">
+                  <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาเพื่อน</span>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="checkbox" name="post-tag" value="หาแฟน" class="hidden peer">
+                  <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาแฟน</span>
+                </label>
+                <label class="cursor-pointer">
+                  <input type="checkbox" name="post-tag" value="หาคนคุย" class="hidden peer">
+                  <span class="badge badge-slate peer-checked:!bg-blue-50 peer-checked:!text-blue-700 peer-checked:ring-2 peer-checked:ring-primary/40 transition-all">หาคนคุย</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Post button -->
+            <div class="flex justify-end mt-1">
+              <button class="btn-primary !py-2 !px-5 !text-sm" onclick="bizNetwork.createPost()">
+                <span class="material-symbols-rounded text-base">send</span>
+                โพสต์
+              </button>
             </div>
 
           </div>
@@ -252,11 +260,6 @@
       โปรไฟล์
     </a>
   </nav>
-
-  <!-- ===== FAB (Mobile) ===== -->
-  <a href="#" class="fab" onclick="event.preventDefault(); document.getElementById('create-post-toggle').click(); window.scrollTo({top:0,behavior:'smooth'});">
-    <span class="material-symbols-rounded text-2xl">add</span>
-  </a>
 
   <!-- ===== Toast ===== -->
   <div id="toast" class="hidden fixed top-5 right-5 bg-white border border-slate-200 text-slate-800 text-sm px-4 py-3 rounded-xl shadow-xl z-[100] flex items-center gap-2 min-w-[16rem] max-w-sm"></div>

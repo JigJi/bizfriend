@@ -8,6 +8,11 @@ html {
   font-size: 17px; /* default 16px → 17px: +6.25% */
 }
 
+/* --- Body font: กำหนดตรงๆ ใน CSS ไม่รอ Tailwind CDN execute → ลด FOUT ตอนเปลี่ยนหน้า --- */
+body {
+  font-family: 'Inter', 'LINE Seed Sans TH', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 /* --- LINE Seed Sans TH (self-hosted) --- */
 @font-face {
   font-family: 'LINE Seed Sans TH';
@@ -450,28 +455,6 @@ body.blur-off .blur-toggle .icon-off {
   background: #f8fafc;
 }
 
-/* --- Floating Action Button (Mobile) --- */
-.fab {
-  display: none;
-  position: fixed;
-  bottom: 5rem;
-  right: 1.5rem;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 9999px;
-  background: linear-gradient(135deg, #004ac6 0%, #2563eb 100%);
-  color: white;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 74, 198, 0.3);
-  z-index: 30;
-  text-decoration: none;
-  transition: transform 0.15s ease;
-}
-.fab:hover {
-  transform: scale(1.08);
-}
-
 /* --- Responsive --- */
 @media (max-width: 1024px) {
   .sidebar-nav {
@@ -483,9 +466,6 @@ body.blur-off .blur-toggle .icon-off {
     padding-bottom: 5rem;
   }
   .bottom-nav {
-    display: flex;
-  }
-  .fab {
     display: flex;
   }
   .hide-mobile {
@@ -678,13 +658,18 @@ body.blur-off .blur-toggle .icon-off {
   .chat-main {
     height: calc(100vh - 12rem);
   }
+  /* !important เพราะ Tailwind CDN utility .flex มี display:flex อาจ override
+     (tailwind inject <style> หลัง stylesheet ของเรา → wins ด้วย source order) */
   .chat-sidebar-panel {
-    display: none;
+    display: none !important;
   }
   .chat-sidebar-panel.show {
-    display: flex;
+    display: flex !important;
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 4rem; /* เว้นที่ให้ bottom-nav ที่สูง ~4rem มองเห็นและใช้งานได้ */
     z-index: 50;
   }
 }

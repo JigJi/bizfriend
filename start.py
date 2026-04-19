@@ -11,11 +11,21 @@ import os
 PORT = 8201
 
 
+STATIC_EXTS = ('.woff2', '.woff', '.ttf', '.otf', '.png', '.jpg', '.jpeg',
+               '.gif', '.webp', '.svg', '.ico', '.mp3', '.mp4')
+
+
 class Handler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
-        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
-        self.send_header('Pragma', 'no-cache')
-        self.send_header('Expires', '0')
+        # HTML/JS/CSS: no-cache (เห็น edits ทันทีตอน dev)
+        # Fonts/images: cache 1h (กัน re-fetch ทุกหน้า ทำให้ font flash ตอน navigate)
+        path = self.path.split('?', 1)[0].lower()
+        if path.endswith(STATIC_EXTS):
+            self.send_header('Cache-Control', 'public, max-age=3600')
+        else:
+            self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Expires', '0')
         super().end_headers()
 
     # Skip reverse DNS — Python's default is getfqdn() which hangs ~2s per req on Windows
